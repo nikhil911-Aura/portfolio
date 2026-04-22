@@ -22,6 +22,7 @@ import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import EasterEgg from "@/components/EasterEgg";
 import RobotAvatar from "@/components/RobotAvatar";
+import ChatWidget from "@/components/ChatWidget";
 
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false });
 
@@ -56,6 +57,7 @@ export default function Home() {
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <EasterEgg />
       <RobotAvatar />
+      <ChatWidget />
 
       <main className="relative min-h-screen">
         <Hero />
@@ -80,7 +82,7 @@ export default function Home() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setCommandOpen(true)}
-          className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg"
+          className="fixed bottom-24 right-6 z-40 w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg"
           style={{
             background: "linear-gradient(135deg, #9333ea, #3b82f6)",
             boxShadow: "0 0 30px rgba(147,51,234,0.4), 0 4px 20px rgba(0,0,0,0.3)",

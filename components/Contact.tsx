@@ -2,16 +2,23 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Mail, Send, CheckCircle2, Loader2, ExternalLink, AlertCircle } from "lucide-react";
+import { Mail, Phone, Send, CheckCircle2, Loader2, ExternalLink, AlertCircle } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
 
 const contactLinks = [
   {
     icon: Mail,
     label: "Email",
-    value: "nikhil.newibrinfotech@gmail.com",
-    href: "mailto:nikhil.newibrinfotech@gmail.com",
+    value: "baghelnikhil911@gmail.com",
+    href: "mailto:baghelnikhil911@gmail.com",
     color: "#9333ea",
+  },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: "+91 9755716505",
+    href: "tel:+919755716505",
+    color: "#22c55e",
   },
   {
     icon: GithubIcon,
@@ -23,8 +30,8 @@ const contactLinks = [
   {
     icon: LinkedinIcon,
     label: "LinkedIn",
-    value: "nikhil-singh",
-    href: "https://linkedin.com/in/nikhil-singh",
+    value: "nikhil-singh-318515308",
+    href: "https://www.linkedin.com/in/nikhil-singh-318515308",
     color: "#0A66C2",
   },
 ];

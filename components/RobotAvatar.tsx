@@ -12,6 +12,24 @@ const MESSAGES = [
   "Built with Next.js ⚡",
 ];
 
+const FACTS = [
+  "🐛 The first real computer bug was a moth found in Harvard's Mark II relay in 1947!",
+  "⚡ JavaScript was written in just 10 days by Brendan Eich in 1995.",
+  "🐧 Linux powers 96% of the world's top 1 million web servers.",
+  "🌐 The first website ever made is still live — info.cern.ch",
+  "🐍 Python was named after Monty Python, not the snake.",
+  "🔬 Moore's Law: CPU transistor count doubles roughly every 2 years.",
+  "👩‍💻 Ada Lovelace wrote the world's first algorithm in the 1840s.",
+  "⚛️ React was open-sourced by Facebook in 2013 and now powers ~40% of the web.",
+  "🎮 The average webpage today is heavier than the original DOOM game.",
+  "🔀 Git was created by Linus Torvalds in just 10 days in 2005.",
+  "☁️ AWS has 200+ cloud services and runs ~33% of the internet.",
+  "🤖 There are over 700 programming languages in existence today.",
+  "📡 The first domain ever registered was symbolics.com — March 15, 1985.",
+  "🔐 The most common password is still '123456'. Please don't. 😬",
+  "📦 npm has over 2.5 million packages — more than any other registry.",
+];
+
 function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) {
   return (
     <svg
@@ -126,11 +144,14 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
 
 export default function RobotAvatar() {
   const [msgIdx, setMsgIdx] = useState(0);
+  const [bubbleText, setBubbleText] = useState(MESSAGES[0]);
+  const [isFact, setIsFact] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const [waving, setWaving] = useState(false);
   const [hovered, setHovered] = useState(false);
   const constraintsRef = useRef<HTMLDivElement>(null);
+  const factActiveRef = useRef(false);
 
   // Periodic blink
   useEffect(() => {
@@ -147,15 +168,24 @@ export default function RobotAvatar() {
     return () => clearTimeout(t);
   }, []);
 
-  // Periodic speech bubble
+  // Periodic speech bubble — cycles through MESSAGES
   useEffect(() => {
     const bubbleLoop = setInterval(() => {
-      setMsgIdx((i) => (i + 1) % MESSAGES.length);
+      // Don't interrupt a fact that's still on screen
+      if (factActiveRef.current) return;
+      setMsgIdx((i) => {
+        const next = (i + 1) % MESSAGES.length;
+        setBubbleText(MESSAGES[next]);
+        setIsFact(false);
+        return next;
+      });
       setShowBubble(true);
       setTimeout(() => setShowBubble(false), 3200);
     }, 7000);
     // Show first message after 2s
     const intro = setTimeout(() => {
+      setBubbleText(MESSAGES[0]);
+      setIsFact(false);
       setShowBubble(true);
       setTimeout(() => setShowBubble(false), 3200);
     }, 2000);
@@ -166,10 +196,16 @@ export default function RobotAvatar() {
   }, []);
 
   const handleClick = () => {
-    setMsgIdx((i) => (i + 1) % MESSAGES.length);
+    const fact = FACTS[Math.floor(Math.random() * FACTS.length)];
+    setBubbleText(fact);
+    setIsFact(true);
     setShowBubble(true);
     setWaving(true);
-    setTimeout(() => setShowBubble(false), 3000);
+    factActiveRef.current = true;
+    setTimeout(() => {
+      setShowBubble(false);
+      factActiveRef.current = false;
+    }, 8000);
     setTimeout(() => setWaving(false), 1500);
   };
 
@@ -201,22 +237,32 @@ export default function RobotAvatar() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 4 }}
               transition={{ type: "spring", bounce: 0.4, duration: 0.3 }}
-              className="absolute text-xs font-medium whitespace-nowrap px-3 py-2 rounded-xl pointer-events-none"
+              className="absolute text-xs font-medium px-3 py-2.5 rounded-xl pointer-events-none"
               style={{
                 bottom: "calc(100% + 10px)",
                 left: "50%",
                 transform: "translateX(-50%)",
-                background: "rgba(5,5,7,0.92)",
-                border: "1px solid rgba(147,51,234,0.45)",
+                background: isFact ? "rgba(10,4,24,0.96)" : "rgba(5,5,7,0.92)",
+                border: isFact
+                  ? "1px solid rgba(99,102,241,0.6)"
+                  : "1px solid rgba(147,51,234,0.45)",
                 color: "#e2e8f0",
-                boxShadow: "0 4px 20px rgba(147,51,234,0.2)",
+                boxShadow: isFact
+                  ? "0 4px 24px rgba(99,102,241,0.3)"
+                  : "0 4px 20px rgba(147,51,234,0.2)",
                 backdropFilter: "blur(10px)",
-                maxWidth: 180,
+                maxWidth: isFact ? 240 : 180,
                 textAlign: "center",
-                lineHeight: 1.4,
+                lineHeight: 1.5,
+                whiteSpace: isFact ? "normal" : "nowrap",
               }}
             >
-              {MESSAGES[msgIdx]}
+              {isFact && (
+                <p className="text-[9px] font-semibold tracking-widest uppercase mb-1" style={{ color: "#818cf8" }}>
+                  Did you know?
+                </p>
+              )}
+              {bubbleText}
               {/* bubble tail */}
               <div
                 className="absolute left-1/2 -bottom-[5px]"
