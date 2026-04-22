@@ -145,10 +145,10 @@ function ExperienceCard({
         whileHover={{ y: -2 }}
         className="rounded-2xl overflow-hidden"
         style={{
-          background: "rgba(255,255,255,0.02)",
+          background: "var(--card-bg)",
           border: exp.current
             ? `1px solid ${exp.color}30`
-            : "1px solid rgba(255,255,255,0.06)",
+            : "1px solid var(--card-border)",
           boxShadow: exp.current ? `0 0 30px ${exp.color}08` : "none",
         }}
       >
@@ -239,8 +239,8 @@ function ExperienceCard({
                 key={t}
                 className="text-xs px-2.5 py-1 rounded-lg"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.07)",
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
                   color: "#94a3b8",
                 }}
               >

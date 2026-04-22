@@ -117,8 +117,8 @@ export default function GitHub() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex flex-wrap items-center justify-between gap-6 mb-10 p-6 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-4">
@@ -169,7 +169,7 @@ export default function GitHub() {
               <div
                 key={i}
                 className="h-44 rounded-2xl animate-pulse"
-                style={{ background: "rgba(255,255,255,0.02)" }}
+                style={{ background: "var(--card-bg)" }}
               />
             ))}
           </div>
@@ -193,8 +193,8 @@ export default function GitHub() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-8 flex flex-wrap items-center justify-between gap-4 p-5 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.01)",
-            border: "1px solid rgba(255,255,255,0.04)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
           }}
         >
           <div className="flex items-center gap-3">
@@ -245,8 +245,8 @@ function RepoCard({
       whileHover={{ y: -4, scale: 1.01 }}
       className="group block p-5 rounded-2xl transition-all duration-300"
       style={{
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.05)",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
       }}
     >
       <div className="flex items-start justify-between gap-2 mb-3">

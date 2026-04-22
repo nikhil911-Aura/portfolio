@@ -98,7 +98,7 @@ export default function About() {
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                background: "rgba(0,0,0,0.6)",
+                background: "var(--code-bg)",
                 border: "1px solid rgba(147,51,234,0.2)",
                 boxShadow: "0 0 40px rgba(147,51,234,0.08)",
               }}
@@ -205,8 +205,8 @@ export default function About() {
                   whileHover={{ scale: 1.02, y: -2 }}
                   className="p-4 rounded-xl transition-all duration-300"
                   style={{
-                    background: "rgba(255,255,255,0.02)",
-                    border: `1px solid ${p.color}20`,
+                    background: "var(--card-bg)",
+                    border: `1px solid ${p.color}30`,
                   }}
                 >
                   <div

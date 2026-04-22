@@ -21,12 +21,14 @@ function CircleProgress({
   color,
   size = 80,
   strokeWidth = 6,
+  inView = false,
 }: {
   value: number;
   max: number;
   color: string;
   size?: number;
   strokeWidth?: number;
+  inView?: boolean;
 }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -39,7 +41,7 @@ function CircleProgress({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="rgba(255,255,255,0.05)"
+        style={{ stroke: "var(--track-bg)" }}
         strokeWidth={strokeWidth}
       />
       <motion.circle
@@ -52,7 +54,7 @@ function CircleProgress({
         strokeLinecap="round"
         strokeDasharray={circumference}
         initial={{ strokeDashoffset: circumference }}
-        animate={{ strokeDashoffset: circumference * (1 - pct) }}
+        animate={{ strokeDashoffset: inView ? circumference * (1 - pct) : circumference }}
         transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
         style={{ filter: `drop-shadow(0 0 6px ${color}60)` }}
       />
@@ -62,7 +64,7 @@ function CircleProgress({
 
 export default function LeetCode() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: false, margin: "-80px" });
   const [stats, setStats] = useState<LeetStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -116,8 +118,8 @@ export default function LeetCode() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="rounded-2xl overflow-hidden"
           style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
           }}
         >
           {loading ? (
@@ -141,6 +143,7 @@ export default function LeetCode() {
                       color="#9333ea"
                       size={100}
                       strokeWidth={7}
+                      inView={inView}
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="text-xl font-bold text-white">{stats.totalSolved}</span>
@@ -211,6 +214,7 @@ export default function LeetCode() {
                         color={d.color}
                         size={80}
                         strokeWidth={5}
+                        inView={inView}
                       />
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <span className="text-base font-bold" style={{ color: d.color }}>

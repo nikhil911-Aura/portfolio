@@ -172,8 +172,8 @@ function TiltCard({
       <motion.div
         className={`relative rounded-2xl overflow-hidden ${large ? "p-6" : "p-5"} transition-all duration-300`}
         style={{
-          background: "rgba(255,255,255,0.02)",
-          border: isHovered ? `1px solid ${project.color}40` : "1px solid rgba(255,255,255,0.06)",
+          background: "var(--card-bg)",
+          border: isHovered ? `1px solid ${project.color}40` : "1px solid var(--card-border)",
           boxShadow: isHovered ? `0 20px 60px rgba(0,0,0,0.4), 0 0 40px ${project.color}15` : "0 4px 24px rgba(0,0,0,0.2)",
         }}
       >
@@ -271,8 +271,8 @@ function TiltCard({
               whileTap={{ scale: 0.97 }}
               className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-all duration-200"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
               }}
             >
               <GithubIcon size={14} />

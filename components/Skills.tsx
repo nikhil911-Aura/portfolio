@@ -142,8 +142,8 @@ export default function Skills() {
                         boxShadow: `0 0 20px ${cat.color}10`,
                       }
                     : {
-                        background: "rgba(255,255,255,0.02)",
-                        border: "1px solid rgba(255,255,255,0.05)",
+                        background: "var(--card-bg)",
+                        border: "1px solid var(--card-border)",
                       }
                 }
               >
@@ -176,8 +176,8 @@ export default function Skills() {
               transition={{ duration: 0.3 }}
               className="p-6 rounded-2xl"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)",
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
               }}
             >
               <div className="flex items-center gap-3 mb-6">
@@ -213,8 +213,8 @@ export default function Skills() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-16 relative overflow-hidden rounded-2xl py-12"
           style={{
-            background: "rgba(255,255,255,0.01)",
-            border: "1px solid rgba(255,255,255,0.04)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
           }}
         >
           <p className="text-center text-xs text-slate-600 tracking-widest uppercase mb-8">
@@ -263,7 +263,7 @@ function SkillBar({
       </div>
       <div
         className="h-1.5 rounded-full overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.06)" }}
+        style={{ background: "var(--track-bg)" }}
       >
         <motion.div
           initial={{ width: 0 }}

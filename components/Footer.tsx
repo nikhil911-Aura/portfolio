@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 const links = [
   { label: "GitHub", href: "https://github.com/Nick-ui911" },
@@ -73,8 +73,8 @@ export default function Footer() {
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-all duration-200"
             style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
             }}
           >
             <ArrowUp size={12} />
@@ -82,7 +82,7 @@ export default function Footer() {
           </motion.button>
         </div>
 
-        <div className="mt-8 pt-6 text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+        <div className="mt-8 pt-6 text-center" style={{ borderTop: "1px solid var(--card-border)" }}>
           <p className="text-xs text-slate-700">
             © {new Date().getFullYear()} Nikhil Singh. Built with Next.js, Framer Motion &amp; Three.js.
           </p>

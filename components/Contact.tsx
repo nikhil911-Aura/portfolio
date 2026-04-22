@@ -119,8 +119,8 @@ export default function Contact() {
             <div
               className="p-6 rounded-2xl mb-2"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)",
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
               }}
             >
               <h3 className="text-lg font-semibold text-white mb-2">
@@ -143,8 +143,8 @@ export default function Contact() {
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-4 p-4 rounded-xl group transition-all duration-200"
                 style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.05)",
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
                 }}
               >
                 <div
@@ -174,8 +174,8 @@ export default function Contact() {
             <div
               className="p-6 sm:p-8 rounded-2xl relative overflow-hidden"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
               }}
             >
               {/* Top gradient line */}
@@ -326,8 +326,8 @@ function FormField({
         onBlur={() => setFocused(false)}
         className="peer w-full px-4 pt-6 pb-2 rounded-xl text-sm text-white focus:outline-none transition-all duration-200"
         style={{
-          background: "rgba(255,255,255,0.04)",
-          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "rgba(255,255,255,0.08)"}`,
+          background: "var(--input-bg)",
+          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "var(--card-border)"}`,
           boxShadow: focused ? "0 0 0 3px rgba(147,51,234,0.08)" : "none",
         }}
         placeholder=""
@@ -383,8 +383,8 @@ function FloatingTextarea({
         onBlur={() => setFocused(false)}
         className="w-full px-4 pt-7 pb-3 rounded-xl text-sm text-white resize-none focus:outline-none transition-all duration-200"
         style={{
-          background: "rgba(255,255,255,0.04)",
-          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "rgba(255,255,255,0.08)"}`,
+          background: "var(--input-bg)",
+          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "var(--card-border)"}`,
           boxShadow: focused ? "0 0 0 3px rgba(147,51,234,0.08)" : "none",
         }}
         placeholder=""

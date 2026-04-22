@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import dynamic from "next/dynamic";
-import { ArrowRight, Mail, ExternalLink, Rocket } from "lucide-react";
+import { ArrowRight, Mail, ExternalLink, Rocket, Download } from "lucide-react";
 import { GithubIcon } from "./icons";
 import { TypeAnimation } from "react-type-animation";
 
@@ -28,6 +28,14 @@ const itemVariants: Variants = {
 export default function Hero() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const scrollToSection = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
@@ -39,7 +47,7 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Background layers */}
-      <div className="absolute inset-0 bg-[#050507]" />
+      <div className="absolute inset-0" style={{ background: "var(--bg)" }} />
       <div
         className="absolute inset-0 opacity-40"
         style={{
@@ -56,10 +64,12 @@ export default function Hero() {
         }}
       />
 
-      {/* Three.js canvas — right side */}
-      <div className="absolute inset-0 lg:left-1/2">
-        <ThreeScene />
-      </div>
+      {/* Three.js canvas — right side, only on desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 lg:left-1/2">
+          <ThreeScene />
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24">
@@ -191,6 +201,12 @@ export default function Hero() {
                 <Mail size={16} />
                 <span>Contact Me</span>
               </MagneticButton>
+
+              {/* TODO: replace href with your hosted resume URL or drop resume.pdf in /public */}
+              <MagneticButton href="/resume.pdf" target="_blank">
+                <Download size={16} />
+                <span>Resume</span>
+              </MagneticButton>
             </motion.div>
 
             {/* Stats row */}
@@ -281,8 +297,8 @@ function MagneticButton({ children, onClick, href, target, primary }: MagneticBu
         boxShadow: "0 0 25px rgba(147,51,234,0.35)",
       }
     : {
-        background: "rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
       };
 
   const content = href ? (

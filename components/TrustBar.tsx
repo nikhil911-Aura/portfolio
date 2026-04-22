@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTheme } from "@/lib/theme";
 
 const techs = [
   { name: "React", color: "#61DAFB" },
@@ -24,16 +25,19 @@ const techs = [
 const doubled = [...techs, ...techs];
 
 export default function TrustBar() {
+  const { theme } = useTheme();
+  const edgeBg = theme === "light" ? "#f1f5f9" : "#050507";
+
   return (
     <section className="relative py-16 overflow-hidden">
       {/* Fade edges */}
       <div
         className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, #050507, transparent)" }}
+        style={{ background: `linear-gradient(90deg, ${edgeBg}, transparent)` }}
       />
       <div
         className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(-90deg, #050507, transparent)" }}
+        style={{ background: `linear-gradient(-90deg, ${edgeBg}, transparent)` }}
       />
 
       <div className="relative">
@@ -88,8 +92,8 @@ function TechBadge({ tech }: { tech: { name: string; color: string } }) {
       whileHover={{ scale: 1.1, y: -2 }}
       className="flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap shrink-0"
       style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
       }}
     >
       <div
