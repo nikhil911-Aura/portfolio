@@ -21,6 +21,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
 import EasterEgg from "@/components/EasterEgg";
+import RobotAvatar from "@/components/RobotAvatar";
 
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false });
 
@@ -54,6 +55,7 @@ export default function Home() {
       <Navigation onCommandPalette={() => setCommandOpen(true)} />
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <EasterEgg />
+      <RobotAvatar />
 
       <main className="relative min-h-screen">
         <Hero />
