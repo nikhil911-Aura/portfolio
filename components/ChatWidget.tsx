@@ -54,8 +54,10 @@ export default function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const stored = parseInt(sessionStorage.getItem(SESSION_KEY) ?? "0");
-    setMsgCount(stored);
+    const raw = parseInt(sessionStorage.getItem(SESSION_KEY) ?? "0");
+    const clamped = Math.max(0, Math.min(raw, SESSION_LIMIT));
+    if (clamped !== raw) sessionStorage.setItem(SESSION_KEY, String(clamped));
+    setMsgCount(clamped);
   }, []);
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function ChatWidget() {
   const limitReached = msgCount >= SESSION_LIMIT;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9970] flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-9970 flex flex-col items-end gap-3">
       {/* ── Chat panel ── */}
       <AnimatePresence>
         {open && (
@@ -152,7 +154,7 @@ export default function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 12 }}
             transition={{ type: "spring", bounce: 0.25, duration: 0.35 }}
-            className="w-[360px] max-w-[calc(100vw-32px)] rounded-2xl overflow-hidden flex flex-col"
+            className="w-90 max-w-[calc(100vw-32px)] rounded-2xl overflow-hidden flex flex-col"
             style={{
               height: 500,
               background: "var(--card-bg)",

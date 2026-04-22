@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
-import { Star, GitFork, ExternalLink, Code2, Clock } from "lucide-react";
+import { Star, GitFork, ExternalLink, Code2, Clock, Download } from "lucide-react";
 import { GithubIcon } from "./icons";
 
 interface Repo {
@@ -187,10 +188,20 @@ function AccountSection({
       >
         <div className="flex items-center gap-4">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center shrink-0"
             style={{ background: accentBg, border: `1px solid ${accentBorder}` }}
           >
-            <GithubIcon size={22} style={{ color: accentColor }} />
+            {stats?.avatar_url ? (
+              <Image
+                src={stats.avatar_url}
+                alt={`${stats.username} avatar`}
+                width={48}
+                height={48}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <GithubIcon size={22} style={{ color: accentColor }} />
+            )}
           </div>
           <div>
             <h3 className="text-base font-bold text-white">
@@ -267,6 +278,14 @@ function AccountSection({
   );
 }
 
+// Map of repo name → release download URL
+const RELEASE_LINKS: Record<string, { label: string; url: string }> = {
+  "melodi-music-player": {
+    label: "Download APK v1.0.0",
+    url: "https://github.com/nikhil911-Aura/melodi-music-player/releases/download/v1.0.0/melodi.apk",
+  },
+};
+
 function RepoCard({
   repo,
   index,
@@ -280,35 +299,60 @@ function RepoCard({
   accentColor: string;
   baseDelay: number;
 }) {
+  const release = RELEASE_LINKS[repo.name];
+
   return (
-    <motion.a
-      href={repo.html_url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: baseDelay + 0.2 + index * 0.07 }}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="group block p-5 rounded-2xl transition-all duration-300"
+      className="group p-5 rounded-2xl transition-all duration-300 flex flex-col"
       style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
     >
+      {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-2 min-w-0">
           <Code2 size={14} className="shrink-0" style={{ color: accentColor }} />
-          <h3
-            className="font-semibold text-sm transition-colors truncate"
-            style={{ color: "var(--text)" }}
-          >
+          <h3 className="font-semibold text-sm truncate" style={{ color: "var(--text)" }}>
             {repo.name}
           </h3>
         </div>
-        <ExternalLink size={12} className="text-slate-600 group-hover:text-slate-400 shrink-0 transition-colors" />
+        <a
+          href={repo.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="shrink-0"
+        >
+          <ExternalLink size={12} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+        </a>
       </div>
 
-      <p className="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-2">
+      <p className="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-2 flex-1">
         {repo.description ?? "No description provided."}
       </p>
 
+      {/* Release button */}
+      {release && (
+        <a
+          href={release.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg mb-3 w-fit transition-all duration-200 hover:opacity-90"
+          style={{
+            background: `${accentColor}18`,
+            border: `1px solid ${accentColor}35`,
+            color: accentColor,
+          }}
+        >
+          <Download size={10} />
+          {release.label}
+        </a>
+      )}
+
+      {/* Footer stats */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {repo.language && (
@@ -334,6 +378,6 @@ function RepoCard({
           <span>{timeAgo(repo.updated_at)}</span>
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   );
 }

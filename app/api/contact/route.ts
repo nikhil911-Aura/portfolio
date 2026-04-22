@@ -4,22 +4,54 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
-  secure: false, // STARTTLS on port 587
+  secure: false,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 });
 
+// IP-based rate limiter: max 3 submissions per hour
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 3;
+const WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT) return false;
+
+  entry.count += 1;
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // Get client IP (works on Vercel and Node)
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
+
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "Too many messages. Please try again in an hour." },
+        { status: 429 }
+      );
+    }
+
     const { name, email, message } = await req.json();
 
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return NextResponse.json({ error: "All fields are required." }, { status: 400 });
     }
 
-    // Basic email format check
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
     }
@@ -65,7 +97,7 @@ export async function POST(req: NextRequest) {
       `,
     });
 
-    // Auto-reply to the sender
+    // Auto-reply to sender
     await transporter.sendMail({
       from: `"Nikhil Singh" <${process.env.SMTP_FROM}>`,
       to: email,
@@ -81,11 +113,9 @@ export async function POST(req: NextRequest) {
           <div style="background: #0f0f1a; border-radius: 8px; padding: 16px; border-left: 3px solid #9333ea; margin-bottom: 24px;">
             <p style="margin: 0; font-size: 13px; color: #64748b; font-style: italic; line-height: 1.6;">"${escapeHtml(message.slice(0, 200))}${message.length > 200 ? "…" : ""}"</p>
           </div>
-          <p style="color: #64748b; font-size: 13px; margin: 0 0 24px;">
-            While you wait, feel free to check out my work:
-          </p>
+          <p style="color: #64748b; font-size: 13px; margin: 0 0 24px;">While you wait, feel free to check out my work:</p>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <a href="https://www.devworld.in/" style="padding: 8px 14px; background: rgba(147,51,234,0.15); color: #a855f7; text-decoration: none; border-radius: 6px; font-size: 12px; border: 1px solid rgba(147,51,234,0.3);">DevWorld</a>
+            <a href="https://devworld-nu.vercel.app" style="padding: 8px 14px; background: rgba(147,51,234,0.15); color: #a855f7; text-decoration: none; border-radius: 6px; font-size: 12px; border: 1px solid rgba(147,51,234,0.3);">DevWorld</a>
             <a href="https://github.com/Nick-ui911" style="padding: 8px 14px; background: rgba(255,255,255,0.04); color: #94a3b8; text-decoration: none; border-radius: 6px; font-size: 12px; border: 1px solid rgba(255,255,255,0.1);">GitHub</a>
           </div>
           <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #1e293b; font-size: 12px; color: #334155;">

@@ -116,50 +116,82 @@ export default function Skills() {
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Category selector */}
+          {/* Category selector — horizontal scroll on mobile, vertical list on desktop */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col gap-2"
           >
-            {skillCategories.map((cat, i) => (
-              <motion.button
-                key={cat.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.2 + i * 0.07 }}
-                onClick={() => setActiveCategory(cat.id)}
-                whileHover={{ x: 4 }}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all duration-200 ${
-                  activeCategory === cat.id ? "text-white" : "text-slate-400 hover:text-white"
-                }`}
-                style={
-                  activeCategory === cat.id
-                    ? {
-                        background: `${cat.color}15`,
-                        border: `1px solid ${cat.color}30`,
-                        boxShadow: `0 0 20px ${cat.color}10`,
-                      }
-                    : {
-                        background: "var(--card-bg)",
-                        border: "1px solid var(--card-border)",
-                      }
-                }
-              >
-                <div
-                  className="w-2 h-2 rounded-full shrink-0 transition-all duration-200"
-                  style={{
-                    backgroundColor: activeCategory === cat.id ? cat.color : "#334155",
-                    boxShadow: activeCategory === cat.id ? `0 0 8px ${cat.color}` : "none",
-                  }}
-                />
-                <span className="font-medium text-sm">{cat.label}</span>
-                <span className="ml-auto text-xs text-slate-600">
-                  {cat.skills.length} skills
-                </span>
-              </motion.button>
-            ))}
+            {/* Mobile: horizontal scrollable row */}
+            <div className="flex lg:hidden gap-2 overflow-x-auto pb-2 hide-scrollbar">
+              {skillCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium whitespace-nowrap shrink-0 transition-all duration-200"
+                  style={
+                    activeCategory === cat.id
+                      ? {
+                          background: `${cat.color}18`,
+                          border: `1px solid ${cat.color}40`,
+                          color: "#fff",
+                        }
+                      : {
+                          background: "var(--card-bg)",
+                          border: "1px solid var(--card-border)",
+                          color: "#94a3b8",
+                        }
+                  }
+                >
+                  <div
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{
+                      backgroundColor: activeCategory === cat.id ? cat.color : "#334155",
+                    }}
+                  />
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Desktop: vertical list */}
+            <div className="hidden lg:flex flex-col gap-2">
+              {skillCategories.map((cat, i) => (
+                <motion.button
+                  key={cat.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.2 + i * 0.07 }}
+                  onClick={() => setActiveCategory(cat.id)}
+                  whileHover={{ x: 4 }}
+                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all duration-200 ${
+                    activeCategory === cat.id ? "text-white" : "text-slate-400 hover:text-white"
+                  }`}
+                  style={
+                    activeCategory === cat.id
+                      ? {
+                          background: `${cat.color}15`,
+                          border: `1px solid ${cat.color}30`,
+                          boxShadow: `0 0 20px ${cat.color}10`,
+                        }
+                      : {
+                          background: "var(--card-bg)",
+                          border: "1px solid var(--card-border)",
+                        }
+                  }
+                >
+                  <div
+                    className="w-2 h-2 rounded-full shrink-0 transition-all duration-200"
+                    style={{
+                      backgroundColor: activeCategory === cat.id ? cat.color : "#334155",
+                      boxShadow: activeCategory === cat.id ? `0 0 8px ${cat.color}` : "none",
+                    }}
+                  />
+                  <span className="font-medium text-sm">{cat.label}</span>
+                  <span className="ml-auto text-xs text-slate-600">{cat.skills.length} skills</span>
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
 
           {/* Skills display */}

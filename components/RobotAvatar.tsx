@@ -150,8 +150,16 @@ export default function RobotAvatar() {
   const [blinking, setBlinking] = useState(false);
   const [waving, setWaving] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const constraintsRef = useRef<HTMLDivElement>(null);
   const factActiveRef = useRef(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768 || "ontouchstart" in window);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Periodic blink
   useEffect(() => {
@@ -215,18 +223,18 @@ export default function RobotAvatar() {
       <div ref={constraintsRef} className="fixed inset-0 pointer-events-none z-[9980]" />
 
       <motion.div
-        drag
-        dragConstraints={constraintsRef}
+        drag={!isMobile}
+        dragConstraints={isMobile ? undefined : constraintsRef}
         dragMomentum={false}
         dragElastic={0.08}
-        whileDrag={{ scale: 1.08, cursor: "grabbing" }}
+        whileDrag={isMobile ? undefined : { scale: 1.08, cursor: "grabbing" }}
         initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 3, type: "spring", bounce: 0.5 }}
         className="fixed z-[9981] select-none"
-        style={{ bottom: 96, left: 24, cursor: "grab" }}
-        onHoverStart={() => setHovered(true)}
-        onHoverEnd={() => setHovered(false)}
+        style={{ bottom: 96, left: 24, cursor: isMobile ? "pointer" : "grab" }}
+        onHoverStart={() => !isMobile && setHovered(true)}
+        onHoverEnd={() => !isMobile && setHovered(false)}
         onClick={handleClick}
       >
         {/* Speech bubble */}

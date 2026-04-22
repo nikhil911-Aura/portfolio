@@ -10,7 +10,8 @@
       "WebFetch(domain:digital.tattooprojects.com)",
       "Bash(curl -s \"https://digital.tattooprojects.com/\")",
       "Bash(curl -s \"https://cdn.prod.website-files.com/65b22c828aafb9c100483aba/css/igors-trendy-site-edfdfb.webflow.65b22c828aafb9c100483abe.28a197f04.opt.min.css\")",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
     ]
   }
 }
