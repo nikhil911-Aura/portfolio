@@ -17,12 +17,13 @@ interface Repo {
   topics: string[];
 }
 
-interface Stats {
+interface AccountStats {
+  username: string;
   public_repos: number;
   followers: number;
   following: number;
   avatar_url: string;
-  bio: string;
+  profile_url: string;
 }
 
 const languageColors: Record<string, string> = {
@@ -48,28 +49,24 @@ function timeAgo(dateStr: string) {
 export default function GitHub() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [repos, setRepos] = useState<Repo[]>([]);
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [primaryRepos, setPrimaryRepos] = useState<Repo[]>([]);
+  const [secondaryRepos, setSecondaryRepos] = useState<Repo[]>([]);
+  const [primaryStats, setPrimaryStats] = useState<AccountStats | null>(null);
+  const [secondaryStats, setSecondaryStats] = useState<AccountStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/github")
       .then((r) => r.json())
       .then((data) => {
-        setRepos(data.repos ?? []);
-        setStats(data.stats ?? null);
+        setPrimaryRepos(data.primaryRepos ?? []);
+        setSecondaryRepos(data.secondaryRepos ?? []);
+        setPrimaryStats(data.stats?.primary ?? null);
+        setSecondaryStats(data.stats?.secondary ?? null);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
-
-  const statItems = stats
-    ? [
-        { label: "Public Repos", value: stats.public_repos, color: "#9333ea" },
-        { label: "Followers", value: stats.followers, color: "#3b82f6" },
-        { label: "Following", value: stats.following, color: "#06b6d4" },
-      ]
-    : [];
 
   return (
     <section id="github" className="relative py-24 overflow-hidden">
@@ -110,118 +107,163 @@ export default function GitHub() {
           </h2>
         </motion.div>
 
-        {/* Profile + Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex flex-wrap items-center justify-between gap-6 mb-10 p-6 rounded-2xl"
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{
-                background: "rgba(147,51,234,0.1)",
-                border: "1px solid rgba(147,51,234,0.2)",
-              }}
-            >
-              <GithubIcon size={24} className="text-purple-400" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">Nick-ui911</h3>
-              <a
-                href="https://github.com/Nick-ui911"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors"
-              >
-                github.com/Nick-ui911 <ExternalLink size={11} />
-              </a>
-            </div>
-          </div>
-          <div className="flex gap-6">
-            {statItems.map((s) => (
-              <div key={s.label} className="text-center">
-                <div
-                  className="text-2xl font-bold"
-                  style={{ color: s.color }}
-                >
-                  {loading ? (
-                    <div className="w-12 h-7 rounded animate-pulse bg-white/5" />
-                  ) : (
-                    s.value
-                  )}
-                </div>
-                <div className="text-xs text-slate-600 mt-0.5">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        {/* Primary account */}
+        <AccountSection
+          stats={primaryStats}
+          repos={primaryRepos}
+          loading={loading}
+          inView={inView}
+          accentColor="#9333ea"
+          accentLight="#a855f7"
+          accentBg="rgba(147,51,234,0.1)"
+          accentBorder="rgba(147,51,234,0.2)"
+          delay={0}
+        />
 
-        {/* Repos grid */}
-        {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-44 rounded-2xl animate-pulse"
-                style={{ background: "var(--card-bg)" }}
-              />
-            ))}
-          </div>
-        ) : repos.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {repos.map((repo, i) => (
-              <RepoCard key={repo.id} repo={repo} index={i} inView={inView} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-slate-500 py-12">
-            <GithubIcon size={32} className="mx-auto mb-3 opacity-30" />
-            <p>Repositories loading...</p>
-          </div>
-        )}
-
-        {/* Secondary GitHub */}
+        {/* Divider */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-8 flex flex-wrap items-center justify-between gap-4 p-5 rounded-2xl"
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <GithubIcon size={18} className="text-slate-500" />
-            <div>
-              <p className="text-sm text-slate-400">Secondary GitHub</p>
-              <a
-                href="https://github.com/nikhil911-Aura"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
-              >
-                github.com/nikhil911-Aura
-              </a>
-            </div>
-          </div>
-          <a
-            href="https://github.com/nikhil911-Aura"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-xs text-slate-500 hover:text-slate-300 transition-colors"
-          >
-            View Profile <ExternalLink size={11} />
-          </a>
-        </motion.div>
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={inView ? { opacity: 1, scaleX: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="my-12 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, var(--card-border), transparent)" }}
+        />
+
+        {/* Secondary account */}
+        <AccountSection
+          stats={secondaryStats}
+          repos={secondaryRepos}
+          loading={loading}
+          inView={inView}
+          accentColor="#06b6d4"
+          accentLight="#22d3ee"
+          accentBg="rgba(6,182,212,0.1)"
+          accentBorder="rgba(6,182,212,0.2)"
+          delay={0.15}
+        />
       </div>
     </section>
+  );
+}
+
+function AccountSection({
+  stats,
+  repos,
+  loading,
+  inView,
+  accentColor,
+  accentLight,
+  accentBg,
+  accentBorder,
+  delay,
+}: {
+  stats: AccountStats | null;
+  repos: Repo[];
+  loading: boolean;
+  inView: boolean;
+  accentColor: string;
+  accentLight: string;
+  accentBg: string;
+  accentBorder: string;
+  delay: number;
+}) {
+  const statItems = stats
+    ? [
+        { label: "Repos", value: stats.public_repos },
+        { label: "Followers", value: stats.followers },
+        { label: "Following", value: stats.following },
+      ]
+    : [];
+
+  return (
+    <div>
+      {/* Account header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay }}
+        className="flex flex-wrap items-center justify-between gap-6 mb-6 p-5 rounded-2xl"
+        style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            style={{ background: accentBg, border: `1px solid ${accentBorder}` }}
+          >
+            <GithubIcon size={22} style={{ color: accentColor }} />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">
+              {loading ? (
+                <div className="w-28 h-4 rounded animate-pulse bg-white/5" />
+              ) : (
+                stats?.username ?? "—"
+              )}
+            </h3>
+            {stats && (
+              <a
+                href={stats.profile_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm flex items-center gap-1 transition-colors hover:opacity-80"
+                style={{ color: accentLight }}
+              >
+                github.com/{stats.username} <ExternalLink size={10} />
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div className="flex gap-6">
+          {loading
+            ? [0, 1, 2].map((i) => (
+                <div key={i} className="text-center">
+                  <div className="w-10 h-6 rounded animate-pulse bg-white/5 mx-auto mb-1" />
+                  <div className="w-14 h-3 rounded animate-pulse bg-white/5" />
+                </div>
+              ))
+            : statItems.map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="text-xl font-bold" style={{ color: accentColor }}>
+                    {s.value}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">{s.label}</div>
+                </div>
+              ))}
+        </div>
+      </motion.div>
+
+      {/* Repos grid */}
+      {loading ? (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-44 rounded-2xl animate-pulse"
+              style={{ background: "var(--card-bg)" }}
+            />
+          ))}
+        </div>
+      ) : repos.length > 0 ? (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {repos.map((repo, i) => (
+            <RepoCard
+              key={repo.id}
+              repo={repo}
+              index={i}
+              inView={inView}
+              accentColor={accentColor}
+              baseDelay={delay}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-slate-500 py-10">
+          <GithubIcon size={28} className="mx-auto mb-2 opacity-30" />
+          <p className="text-sm">No public repositories found.</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -229,10 +271,14 @@ function RepoCard({
   repo,
   index,
   inView,
+  accentColor,
+  baseDelay,
 }: {
   repo: Repo;
   index: number;
   inView: boolean;
+  accentColor: string;
+  baseDelay: number;
 }) {
   return (
     <motion.a
@@ -241,18 +287,18 @@ function RepoCard({
       rel="noopener noreferrer"
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: 0.2 + index * 0.08 }}
+      transition={{ duration: 0.5, delay: baseDelay + 0.2 + index * 0.07 }}
       whileHover={{ y: -4, scale: 1.01 }}
       className="group block p-5 rounded-2xl transition-all duration-300"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--card-border)",
-      }}
+      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
     >
       <div className="flex items-start justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2">
-          <Code2 size={14} className="text-purple-400 shrink-0" />
-          <h3 className="font-semibold text-white text-sm group-hover:text-purple-300 transition-colors truncate">
+        <div className="flex items-center gap-2 min-w-0">
+          <Code2 size={14} className="shrink-0" style={{ color: accentColor }} />
+          <h3
+            className="font-semibold text-sm transition-colors truncate"
+            style={{ color: "var(--text)" }}
+          >
             {repo.name}
           </h3>
         </div>
