@@ -20,7 +20,7 @@ const STARTERS = [
 const SESSION_KEY = "portfolio-chat-count";
 const SESSION_LIMIT = 20;
 
-const CONTACT_INTENT = /\b(send|write|shoot|drop|forward|submit)\b.{0,30}\b(email|mail|message|msg)\b|\b(contact|reach|message|email|hire|ping|dm)\b.{0,20}\b(nikhil|him|you|them)\b|\b(get in touch|reach out|how (do i|can i|to) contact|how (do i|can i|to) reach)\b/i;
+const CONTACT_INTENT = /\b(send|write|shoot|drop|forward|submit)\b.{0,30}\b(email|mail|message|msg)\b|\b(contact|reach|message|email|hire|ping|dm)\b.{0,20}\b(nikhil|him|you|them)\b|\b(get in touch|reach out|how (do i|can i|to) contact|how (do i|can i|to) reach)\b|\b(navigate|go|take me|open|show|visit).{0,20}\b(contact|form)\b|\bcontact\s*(form|page|section)\b|\bi want to\s*(contact|reach|hire|message)\b/i;
 
 function MarkdownMessage({ text }: { text: string }) {
   const lines = text.split("\n").filter((l) => l.trim() !== "");
