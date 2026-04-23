@@ -465,8 +465,8 @@ export default function ChatWidget() {
             transition={{ type: "spring", bounce: 0.35, duration: 0.4, delay: 0.1 }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-none self-end mb-1"
             style={{
-              background: "rgba(10,4,20,0.85)",
-              border: "1px solid rgba(147,51,234,0.35)",
+              background: "rgba(10,4,20,0.88)",
+              border: "1px solid rgba(147,51,234,0.45)",
               backdropFilter: "blur(12px)",
               boxShadow: "0 4px 20px rgba(147,51,234,0.2)",
             }}
@@ -474,11 +474,11 @@ export default function ChatWidget() {
             <motion.span
               animate={{ rotate: [0, 15, -10, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
-              className="text-purple-400"
+              style={{ color: "#c084fc" }}
             >
               <Sparkles size={11} />
             </motion.span>
-            <span className="text-xs font-medium text-white whitespace-nowrap">Ask AI</span>
+            <span className="text-xs font-medium whitespace-nowrap" style={{ color: "#fff" }}>Ask AI</span>
             <span
               className="w-1.5 h-1.5 rounded-full bg-green-400"
               style={{ boxShadow: "0 0 6px #4ade80" }}
