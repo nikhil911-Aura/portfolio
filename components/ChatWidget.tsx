@@ -18,9 +18,57 @@ const STARTERS = [
 ];
 
 const SESSION_KEY = "portfolio-chat-count";
-const SESSION_LIMIT = 15;
+const SESSION_LIMIT = 20;
 
 const CONTACT_INTENT = /\b(send|write|shoot|drop|forward|submit)\b.{0,30}\b(email|mail|message|msg)\b|\b(contact|reach|message|email|hire|ping|dm)\b.{0,20}\b(nikhil|him|you|them)\b|\b(get in touch|reach out|how (do i|can i|to) contact|how (do i|can i|to) reach)\b/i;
+
+function MarkdownMessage({ text }: { text: string }) {
+  const lines = text.split("\n").filter((l) => l.trim() !== "");
+
+  const renderInline = (str: string) => {
+    const parts = str.split(/\*\*(.+?)\*\*/g);
+    return parts.map((p, i) =>
+      i % 2 === 1 ? (
+        <strong key={i} className="text-white font-semibold">
+          {p}
+        </strong>
+      ) : (
+        p
+      )
+    );
+  };
+
+  const items: React.ReactNode[] = [];
+  let bulletBuffer: string[] = [];
+
+  const flushBullets = () => {
+    if (bulletBuffer.length === 0) return;
+    items.push(
+      <ul key={`ul-${items.length}`} className="flex flex-col gap-1 my-1 pl-1">
+        {bulletBuffer.map((b, i) => (
+          <li key={i} className="flex items-start gap-2">
+            <span className="mt-1.5 w-1 h-1 rounded-full bg-purple-400 shrink-0" />
+            <span>{renderInline(b)}</span>
+          </li>
+        ))}
+      </ul>
+    );
+    bulletBuffer = [];
+  };
+
+  for (const line of lines) {
+    const stripped = line.replace(/^[-•*]\s+/, "");
+    if (/^[-•*]\s+/.test(line)) {
+      bulletBuffer.push(stripped);
+    } else {
+      flushBullets();
+      items.push(<p key={`p-${items.length}`} className="leading-relaxed">{renderInline(line)}</p>);
+    }
+  }
+  flushBullets();
+
+  return <div className="flex flex-col gap-1 text-sm">{items}</div>;
+}
 
 function ContactButton({ onNavigate }: { onNavigate: () => void }) {
   return (
@@ -43,6 +91,13 @@ function ContactButton({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
+type Provider = "groq" | "cerebras";
+
+const PROVIDERS: { id: Provider; label: string; color: string }[] = [
+  { id: "groq", label: "Groq", color: "#f97316" },
+  { id: "cerebras", label: "Cerebras", color: "#06b6d4" },
+];
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -50,6 +105,7 @@ export default function ChatWidget() {
   const [streaming, setStreaming] = useState(false);
   const [streamContent, setStreamContent] = useState("");
   const [msgCount, setMsgCount] = useState(0);
+  const [provider, setProvider] = useState<Provider>("groq");
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -109,6 +165,7 @@ export default function ChatWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          provider,
           messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
@@ -186,10 +243,32 @@ export default function ChatWidget() {
                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-400" />
                   </span>
                   <span className="text-[10px] text-slate-500">
-                    Llama 3 · Groq · {SESSION_LIMIT - msgCount} msgs left
+                    Llama 3 · {provider === "groq" ? "Groq" : "Cerebras"} · {SESSION_LIMIT - msgCount} msgs left
                   </span>
                 </div>
               </div>
+
+              {/* Provider toggle */}
+              <div
+                className="flex items-center rounded-lg p-0.5 shrink-0"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                {PROVIDERS.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setProvider(p.id)}
+                    className="px-2 py-1 rounded-md text-[10px] font-medium transition-all duration-200"
+                    style={
+                      provider === p.id
+                        ? { background: p.color, color: "#fff", boxShadow: `0 0 8px ${p.color}55` }
+                        : { color: "#64748b" }
+                    }
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+
               <button
                 onClick={() => setOpen(false)}
                 className="p-1.5 rounded-lg text-slate-500 hover:text-white transition-colors shrink-0"
@@ -253,7 +332,11 @@ export default function ChatWidget() {
                           }
                     }
                   >
-                    {msg.content}
+                    {msg.role === "assistant" ? (
+                      <MarkdownMessage text={msg.content} />
+                    ) : (
+                      msg.content
+                    )}
                     {msg.showContactButton && (
                       <ContactButton onNavigate={navigateToContact} />
                     )}
@@ -278,7 +361,7 @@ export default function ChatWidget() {
                   >
                     {streamContent ? (
                       <>
-                        {streamContent}
+                        <MarkdownMessage text={streamContent} />
                         <motion.span
                           animate={{ opacity: [1, 0] }}
                           transition={{ duration: 0.5, repeat: Infinity }}
