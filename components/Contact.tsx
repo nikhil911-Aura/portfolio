@@ -45,6 +45,7 @@ export default function Contact() {
   const [formState, setFormState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [bgHovered, setBgHovered] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,14 +76,22 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-24 overflow-hidden">
+    <section
+      id="contact"
+      className="relative py-24 overflow-hidden"
+      onMouseEnter={() => setBgHovered(true)}
+      onMouseLeave={() => setBgHovered(false)}
+    >
       {/* Full-bleed background image */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <img
           src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1400&q=85"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "grayscale(100%) brightness(0.18)" }}
+          style={{
+            filter: bgHovered ? "grayscale(0%) brightness(0.35)" : "grayscale(100%) brightness(0.18)",
+            transition: "filter 0.8s ease",
+          }}
         />
         <div
           className="absolute inset-0"

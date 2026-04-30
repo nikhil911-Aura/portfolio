@@ -17,8 +17,8 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Socket.io", "Razorpay", "JWT"],
     color: "#9333ea",
     featured: true,
-    bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1400&q=85",
-    mockupImage: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=700&q=80",
+    bgImage: "/images/image4.jpg",
+    mockupImage: "/images/image8.jpg",
   },
   {
     id: 2,
@@ -30,8 +30,8 @@ const projects = [
     tech: ["Next.js", "OpenAI API", "TypeScript", "Tailwind CSS", "Framer Motion"],
     color: "#06b6d4",
     featured: true,
-    bgImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1400&q=85",
-    mockupImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=700&q=80",
+    bgImage: "/images/image5.jpg",
+    mockupImage: "/images/image9.jpg",
   },
   {
     id: 3,
@@ -43,8 +43,8 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Stripe", "Nodemailer"],
     color: "#3b82f6",
     featured: false,
-    bgImage: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1400&q=85",
-    mockupImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=700&q=80",
+    bgImage: "/images/image6.jpg",
+    mockupImage: "/images/image10.jpg",
   },
   {
     id: 4,
@@ -56,8 +56,8 @@ const projects = [
     tech: ["Next.js", "Prisma", "PostgreSQL", "TypeScript", "Tailwind CSS"],
     color: "#ec4899",
     featured: false,
-    bgImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85",
-    mockupImage: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=700&q=80",
+    bgImage: "/images/image7.jpg",
+    mockupImage: "/images/image11.jpg",
   },
 ];
 

@@ -28,9 +28,9 @@ const itemVariants: Variants = {
 };
 
 const heroImages = [
-  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85",
-  "https://plus.unsplash.com/premium_photo-1678565999332-1cde462f7b24?w=800&q=85",
-  "https://images.unsplash.com/photo-1733412505442-36cfa59a4240?w=800&q=85",
+  "/images/image14.jpg",
+  "/images/image15.jpg",
+  "/images/image3.jpg",
 ];
 
 export default function Hero() {
@@ -48,9 +48,9 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const col1Y = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
-  const col2Y = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const col3Y = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const col1Y = useTransform(scrollYProgress, [0, 1], ["0%", "-15%"]);
+  const col2Y = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const col3Y = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -129,7 +129,7 @@ export default function Hero() {
       {/* Grid overlay */}
       <div
         ref={gridRef}
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-40 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(147,51,234,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(147,51,234,0.07) 1px, transparent 1px)",
@@ -137,7 +137,7 @@ export default function Hero() {
         }}
       />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(147,51,234,0.06) 0%, transparent 70%)",
@@ -151,16 +151,24 @@ export default function Hero() {
             <div
               key={i}
               className="relative overflow-hidden"
-              style={{ width: col.width, flexShrink: 0 }}
+              style={{ width: col.width, flexShrink: 0, cursor: "pointer" }}
+              onMouseEnter={(e) => {
+                const img = e.currentTarget.querySelector("img");
+                if (img) img.style.filter = "grayscale(0%) brightness(0.85)";
+              }}
+              onMouseLeave={(e) => {
+                const img = e.currentTarget.querySelector("img");
+                if (img) img.style.filter = "grayscale(100%) brightness(0.55)";
+              }}
             >
               <motion.div
                 style={{
                   y: col.y,
                   position: "absolute",
-                  top: "-25%",
+                  top: "-10%",
                   left: 0,
                   right: 0,
-                  bottom: "-25%",
+                  bottom: "-10%",
                 }}
               >
                 <img
@@ -170,14 +178,6 @@ export default function Hero() {
                   style={{
                     filter: "grayscale(100%) brightness(0.55)",
                     transition: "filter 0.6s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.filter =
-                      "grayscale(0%) brightness(0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.filter =
-                      "grayscale(100%) brightness(0.55)";
                   }}
                 />
               </motion.div>
@@ -375,7 +375,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Right side — image columns fill this space on desktop */}
-          <div className="hidden lg:block" />
+          <div className="hidden lg:block pointer-events-none" />
         </div>
       </div>
 

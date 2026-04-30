@@ -21,7 +21,7 @@ const experiences = [
     location: "Indore (On-site)",
     current: true,
     color: "#9333ea",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80",
+    image: "/images/image12.jpg",
     highlights: [
       "Building scalable full-stack applications using MERN stack with focus on performance and maintainability",
       "Developing AI-assisted automation workflows and third-party integrations using n8n and GenAI APIs",
@@ -40,7 +40,7 @@ const experiences = [
     location: "Indore",
     current: false,
     color: "#3b82f6",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80",
+    image: "/images/image13.jpg",
     highlights: [
       "Improved React application performance by 20% through memoization, lazy loading, and code splitting",
       "Implemented Redux-based state management architecture for complex multi-step user flows",
@@ -117,7 +117,7 @@ export default function Experience() {
         }
 
         // Bullet points reveal one by one
-        card.querySelectorAll<HTMLElement>(".exp-bullet").forEach((bullet, j) => {
+        card.querySelectorAll<HTMLElement>(".exp-bullet").forEach((bullet) => {
           gsap.fromTo(
             bullet,
             { x: -14, opacity: 0 },
