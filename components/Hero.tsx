@@ -8,6 +8,7 @@ import { GithubIcon } from "./icons";
 import { TypeAnimation } from "react-type-animation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AuroraBackground from "./AuroraBackground";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -27,9 +28,9 @@ const itemVariants: Variants = {
 };
 
 const heroImages = [
-  "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&q=85",
   "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85",
-  "https://images.unsplash.com/photo-1618477247222-acbde0ff6c2d?w=800&q=85",
+  "https://plus.unsplash.com/premium_photo-1678565999332-1cde462f7b24?w=800&q=85",
+  "https://images.unsplash.com/photo-1733412505442-36cfa59a4240?w=800&q=85",
 ];
 
 export default function Hero() {
@@ -121,6 +122,9 @@ export default function Hero() {
     >
       {/* Base background */}
       <div className="absolute inset-0" style={{ background: "var(--bg)" }} />
+
+      {/* Aurora animated background */}
+      <AuroraBackground />
 
       {/* Grid overlay */}
       <div

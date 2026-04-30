@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Loader2, Mail, Send, Sparkles, X, MessageSquare } from "lucide-react";
+import { Bot, Loader2, Mail, Send, Sparkles, Trash2, X, MessageSquare } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -17,7 +17,8 @@ const STARTERS = [
   { text: "What DevOps tools does he use?", emoji: "🛠️" },
 ];
 
-const SESSION_KEY = "portfolio-chat-count";
+const MESSAGES_KEY = "portfolio-chat-messages";
+const COUNT_KEY = "portfolio-chat-count";
 const SESSION_LIMIT = 20;
 
 const CONTACT_INTENT = /\b(send|write|shoot|drop|forward|submit)\b.{0,30}\b(email|mail|message|msg)\b|\b(contact|reach|message|email|hire|ping|dm)\b.{0,20}\b(nikhil|him|you|them)\b|\b(get in touch|reach out|how (do i|can i|to) contact|how (do i|can i|to) reach)\b|\b(navigate|go|take me|open|show|visit).{0,20}\b(contact|form)\b|\bcontact\s*(form|page|section)\b|\bi want to\s*(contact|reach|hire|message)\b/i;
@@ -111,12 +112,26 @@ export default function ChatWidget() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Restore chat history and count from localStorage on mount
   useEffect(() => {
-    const raw = parseInt(sessionStorage.getItem(SESSION_KEY) ?? "0");
-    const clamped = Math.max(0, Math.min(raw, SESSION_LIMIT));
-    if (clamped !== raw) sessionStorage.setItem(SESSION_KEY, String(clamped));
-    setMsgCount(clamped);
+    try {
+      const saved = localStorage.getItem(MESSAGES_KEY);
+      if (saved) setMessages(JSON.parse(saved));
+      const raw = parseInt(localStorage.getItem(COUNT_KEY) ?? "0");
+      setMsgCount(Math.max(0, Math.min(raw, SESSION_LIMIT)));
+    } catch {
+      // ignore parse errors
+    }
   }, []);
+
+  // Persist messages to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+    } catch {
+      // storage quota exceeded
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 220);
@@ -125,6 +140,17 @@ export default function ChatWidget() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, streamContent]);
+
+  const clearChat = () => {
+    setMessages([]);
+    setMsgCount(0);
+    try {
+      localStorage.removeItem(MESSAGES_KEY);
+      localStorage.removeItem(COUNT_KEY);
+    } catch {
+      // ignore
+    }
+  };
 
   const navigateToContact = () => {
     setOpen(false);
@@ -143,7 +169,7 @@ export default function ChatWidget() {
 
     const newCount = msgCount + 1;
     setMsgCount(newCount);
-    sessionStorage.setItem(SESSION_KEY, String(newCount));
+    localStorage.setItem(COUNT_KEY, String(newCount));
 
     if (CONTACT_INTENT.test(text.trim())) {
       setMessages((prev) => [
@@ -293,6 +319,25 @@ export default function ChatWidget() {
                 ))}
               </div>
 
+              {messages.length > 0 && (
+                <button
+                  onClick={clearChat}
+                  title="Clear chat history"
+                  className="p-1.5 rounded-lg transition-all duration-150 shrink-0"
+                  style={{ color: "#475569" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "#f87171";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(248,113,113,0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "#475569";
+                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                  }}
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+
               <button
                 onClick={() => setOpen(false)}
                 className="p-1.5 rounded-lg transition-all duration-150 shrink-0"
@@ -313,7 +358,8 @@ export default function ChatWidget() {
             {/* Messages area */}
             <div
               className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4"
-              style={{ scrollbarWidth: "none" }}
+              style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(147,51,234,0.3) transparent" }}
+              data-lenis-prevent
             >
               {/* Empty state */}
               {messages.length === 0 && !streaming && (
