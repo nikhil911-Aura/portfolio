@@ -6,6 +6,12 @@ import dynamic from "next/dynamic";
 import { ArrowRight, Mail, ExternalLink, Rocket, Download } from "lucide-react";
 import { GithubIcon } from "./icons";
 import { TypeAnimation } from "react-type-animation";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const ThreeScene = dynamic(() => import("./ThreeScene"), {
   ssr: false,
@@ -29,12 +35,68 @@ export default function Hero() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const [isMobile, setIsMobile] = useState(false);
+  const headlineRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Scroll departure — hero reacts as user scrolls away
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const section = document.getElementById("hero");
+      if (!section) return;
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.2,
+        onUpdate: (self) => {
+          const p = self.progress;
+
+          // Headline drifts up and fades
+          if (headlineRef.current) {
+            gsap.set(headlineRef.current, {
+              y: -p * 70,
+              opacity: Math.max(0, 1 - p * 2.2),
+            });
+          }
+
+          // Stats row rotates on Y axis and fades (like a flip board)
+          if (statsRef.current) {
+            gsap.set(statsRef.current, {
+              rotateX: p * 25,
+              opacity: Math.max(0, 1 - p * 3),
+              transformPerspective: 600,
+            });
+          }
+
+          // Status badge rises slightly faster
+          if (badgeRef.current) {
+            gsap.set(badgeRef.current, {
+              y: -p * 40,
+              opacity: Math.max(0, 1 - p * 3),
+            });
+          }
+
+          // Grid parallax (slower than content)
+          if (gridRef.current) {
+            gsap.set(gridRef.current, {
+              y: p * 30,
+            });
+          }
+        },
+      });
+    });
+
+    return () => ctx.revert();
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -49,6 +111,7 @@ export default function Hero() {
       {/* Background layers */}
       <div className="absolute inset-0" style={{ background: "var(--bg)" }} />
       <div
+        ref={gridRef}
         className="absolute inset-0 opacity-40"
         style={{
           backgroundImage:
@@ -82,7 +145,7 @@ export default function Hero() {
             className="flex flex-col gap-6"
           >
             {/* Status badge */}
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} ref={badgeRef}>
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
                 style={{
@@ -101,7 +164,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Heading */}
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} ref={headlineRef}>
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
                 <span className="text-white">Hi, I&apos;m</span>
                 <br />
@@ -202,7 +265,6 @@ export default function Hero() {
                 <span>Contact Me</span>
               </MagneticButton>
 
-              {/* TODO: replace href with your hosted resume URL or drop resume.pdf in /public */}
               <MagneticButton href="/resume.pdf" target="_blank">
                 <Download size={16} />
                 <span>Resume</span>
@@ -212,6 +274,7 @@ export default function Hero() {
             {/* Stats row */}
             <motion.div
               variants={itemVariants}
+              ref={statsRef}
               className="flex gap-6 pt-4 border-t border-white/5"
             >
               {[
@@ -286,9 +349,7 @@ function MagneticButton({ children, onClick, href, target, primary }: MagneticBu
   };
 
   const commonClass = `inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-    primary
-      ? "text-white"
-      : "text-slate-300 hover:text-white"
+    primary ? "text-white" : "text-slate-300 hover:text-white"
   }`;
 
   const commonStyle = primary

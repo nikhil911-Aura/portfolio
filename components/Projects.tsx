@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ExternalLink, ArrowUpRight, Star } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { ExternalLink, Star } from "lucide-react";
 import { GithubIcon } from "./icons";
 
 const projects = [
@@ -16,7 +16,6 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Socket.io", "Razorpay", "JWT"],
     color: "#9333ea",
     featured: true,
-    gradient: "from-purple-500/20 to-blue-500/20",
   },
   {
     id: 2,
@@ -28,7 +27,6 @@ const projects = [
     tech: ["Next.js", "OpenAI API", "TypeScript", "Tailwind CSS", "Framer Motion"],
     color: "#06b6d4",
     featured: true,
-    gradient: "from-cyan-500/20 to-blue-500/20",
   },
   {
     id: 3,
@@ -40,7 +38,6 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Stripe", "Nodemailer"],
     color: "#3b82f6",
     featured: false,
-    gradient: "from-blue-500/20 to-indigo-500/20",
   },
   {
     id: 4,
@@ -52,235 +49,267 @@ const projects = [
     tech: ["Next.js", "Prisma", "PostgreSQL", "TypeScript", "Tailwind CSS"],
     color: "#ec4899",
     featured: false,
-    gradient: "from-pink-500/20 to-rose-500/20",
   },
 ];
 
-export default function Projects() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
-  return (
-    <section id="projects" className="relative py-24 overflow-hidden">
-      {/* Glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          width: "800px",
-          height: "600px",
-          background: "radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
-      />
-
-      <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-            Portfolio
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            Featured{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Projects
-            </span>
-          </h2>
-          <p className="mt-4 text-slate-500 max-w-xl mx-auto">
-            Real products shipped to production — not just side projects.
-          </p>
-        </motion.div>
-
-        {/* Featured projects — large */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {projects.filter((p) => p.featured).map((project, i) => (
-            <TiltCard key={project.id} project={project} index={i} inView={inView} large />
-          ))}
-        </div>
-
-        {/* Other projects — smaller */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.filter((p) => !p.featured).map((project, i) => (
-            <TiltCard key={project.id} project={project} index={i + 2} inView={inView} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  live: string;
+  github: string;
+  tech: string[];
+  color: string;
+  featured: boolean;
 }
 
-function TiltCard({
-  project,
-  index,
-  inView,
-  large,
-}: {
-  project: (typeof projects)[0];
+interface StackedCardProps {
+  project: Project;
   index: number;
-  inView: boolean;
-  large?: boolean;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  total: number;
+  scrollYProgress: MotionValue<number>;
+}
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
+function StackedCard({ project, index, total, scrollYProgress }: StackedCardProps) {
+  const n = total; // 4
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
+  // Clip-path: this card wipes in from below
+  // Card 0 is already visible. Cards 1-3 wipe in.
+  const clipFrom = index === 0 ? "inset(0% 0 0% 0)" : "inset(100% 0 0% 0)";
+  const clipRange =
+    index === 0
+      ? ([0, 0.001] as [number, number])
+      : ([Math.max(0, index / n - 0.02), index / n + 0.07] as [number, number]);
+  const clipPath = useTransform(scrollYProgress, clipRange, [clipFrom, "inset(0% 0 0% 0)"]);
 
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-    setIsHovered(false);
-  };
+  // Scale and y: this card gets pushed back when the NEXT card enters
+  const nextStart = (index + 1) / n;
+  const scaleRange: [number, number] =
+    index === n - 1 ? [0.99, 1] : [nextStart - 0.01, nextStart + 0.1];
+  const scaleValues: [number, number] = index === n - 1 ? [1, 1] : [1, 0.91];
+  const yRange: [number, number] =
+    index === n - 1 ? [0.99, 1] : [nextStart - 0.01, nextStart + 0.1];
+  const yValues: [number, number] = index === n - 1 ? [0, 0] : [0, -55];
+
+  const scale = useTransform(scrollYProgress, scaleRange, scaleValues);
+  const y = useTransform(scrollYProgress, yRange, yValues);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      ref={ref}
-      data-cursor-view
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
       style={{
-        perspective: 1000,
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
+        position: "sticky",
+        top: 0,
+        height: "100vh",
+        zIndex: index + 1,
+        clipPath,
+        scale,
+        y,
+        overflow: "hidden",
       }}
-      className="group"
     >
-      <motion.div
-        className={`relative rounded-2xl overflow-hidden ${large ? "p-6" : "p-5"} transition-all duration-300`}
-        style={{
-          background: "var(--card-bg)",
-          border: isHovered ? `1px solid ${project.color}40` : "1px solid var(--card-border)",
-          boxShadow: isHovered ? `0 20px 60px rgba(0,0,0,0.4), 0 0 40px ${project.color}15` : "0 4px 24px rgba(0,0,0,0.2)",
-        }}
+      {/* Full viewport card content */}
+      <div
+        className="w-full h-full relative flex items-center"
+        style={{ background: "var(--bg)" }}
       >
-        {/* Gradient overlay */}
-        <motion.div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        {/* Giant project number watermark */}
+        <div
+          className="absolute select-none pointer-events-none font-black"
           style={{
-            background: `radial-gradient(ellipse at 50% 0%, ${project.color}08 0%, transparent 70%)`,
+            right: "4vw",
+            bottom: "4vh",
+            fontSize: "clamp(8rem, 22vw, 20rem)",
+            lineHeight: 1,
+            color: "rgba(255,255,255,0.018)",
+            fontFamily: "monospace",
           }}
-        />
+        >
+          {String(index + 1).padStart(2, "0")}
+        </div>
 
-        {/* Top line */}
-        <motion.div
+        {/* Top accent bar */}
+        <div
           className="absolute top-0 left-0 right-0 h-px"
           style={{
-            background: `linear-gradient(90deg, transparent, ${project.color}60, transparent)`,
-            opacity: isHovered ? 1 : 0,
+            background: `linear-gradient(90deg, transparent, ${project.color}50, transparent)`,
           }}
-          transition={{ duration: 0.3 }}
         />
 
-        <div className="relative z-10">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4 mb-3">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left: project info */}
             <div>
-              {project.featured && (
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Star size={10} style={{ color: project.color }} />
-                  <span className="text-xs font-medium" style={{ color: project.color }}>
-                    Featured
+              <div className="flex items-center gap-3 mb-5">
+                {project.featured && (
+                  <span
+                    className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full"
+                    style={{
+                      background: `${project.color}15`,
+                      color: project.color,
+                      border: `1px solid ${project.color}30`,
+                    }}
+                  >
+                    <Star size={9} /> Featured
                   </span>
-                </div>
-              )}
-              <h3 className={`font-bold text-white ${large ? "text-2xl" : "text-lg"}`}>
-                {project.title}
-              </h3>
-            </div>
-            <motion.div
-              animate={{ rotate: isHovered ? 45 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{
-                background: `${project.color}15`,
-                border: `1px solid ${project.color}30`,
-              }}
-            >
-              <ArrowUpRight size={14} style={{ color: project.color }} />
-            </motion.div>
-          </div>
+                )}
+                <span className="text-xs font-mono text-slate-600">
+                  {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+                </span>
+              </div>
 
-          {/* Description */}
-          <p className={`text-slate-400 leading-relaxed mb-4 ${large ? "text-sm" : "text-xs"}`}>
-            {project.description}
-          </p>
-
-          {/* Tech badges */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
-            {project.tech.map((t) => (
-              <span
-                key={t}
-                className="text-xs px-2 py-0.5 rounded-md"
+              <h3
+                className="font-black text-white mb-4"
                 style={{
-                  background: `${project.color}10`,
-                  border: `1px solid ${project.color}20`,
-                  color: project.color,
+                  fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.02em",
                 }}
               >
-                {t}
-              </span>
-            ))}
-          </div>
+                {project.title}
+              </h3>
 
-          {/* Action buttons */}
-          <div className="flex gap-2">
-            <motion.a
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium text-white transition-all duration-200"
-              style={{
-                background: `linear-gradient(135deg, ${project.color}cc, ${project.color}99)`,
-                boxShadow: isHovered ? `0 0 20px ${project.color}40` : "none",
-              }}
-            >
-              <ExternalLink size={13} />
-              Live Demo
-            </motion.a>
-            <motion.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-all duration-200"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-              }}
-            >
-              <GithubIcon size={14} />
-            </motion.a>
+              <p className="text-slate-400 leading-relaxed mb-6 text-base max-w-lg">
+                {project.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-8">
+                {project.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="text-xs px-2.5 py-1 rounded-lg"
+                    style={{
+                      background: `${project.color}10`,
+                      border: `1px solid ${project.color}25`,
+                      color: project.color,
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
+                  style={{
+                    background: `linear-gradient(135deg, ${project.color}, ${project.color}bb)`,
+                    boxShadow: `0 0 24px ${project.color}35`,
+                  }}
+                >
+                  <ExternalLink size={13} /> Live Demo
+                </a>
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-colors"
+                  style={{
+                    background: "var(--card-bg)",
+                    border: "1px solid var(--card-border)",
+                  }}
+                >
+                  <GithubIcon size={14} />
+                </a>
+              </div>
+            </div>
+
+            {/* Right: decorative glass panel */}
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="relative w-full" style={{ maxWidth: 420 }}>
+                <div
+                  className="rounded-2xl relative overflow-hidden"
+                  style={{
+                    aspectRatio: "16/10",
+                    background: `${project.color}05`,
+                    border: `1px solid ${project.color}25`,
+                    boxShadow: `0 0 80px ${project.color}10, inset 0 1px 0 rgba(255,255,255,0.04)`,
+                  }}
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `radial-gradient(ellipse at 25% 35%, ${project.color}25 0%, transparent 55%), radial-gradient(ellipse at 75% 70%, ${project.color}12 0%, transparent 50%)`,
+                    }}
+                  />
+                  {/* Tech stack grid */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="grid grid-cols-3 gap-3 p-8">
+                      {project.tech.slice(0, 6).map((t, ti) => (
+                        <div
+                          key={ti}
+                          className="text-xs font-mono font-semibold text-center px-2 py-1.5 rounded-lg"
+                          style={{
+                            background: "rgba(255,255,255,0.04)",
+                            border: "1px solid rgba(255,255,255,0.07)",
+                            color: "rgba(255,255,255,0.5)",
+                          }}
+                        >
+                          {t}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Corner glow */}
+                  <div
+                    className="absolute top-3 right-3 w-2 h-2 rounded-full"
+                    style={{
+                      background: project.color,
+                      boxShadow: `0 0 8px ${project.color}`,
+                    }}
+                  />
+                </div>
+                {/* Shadow below */}
+                <div
+                  className="absolute -bottom-4 left-8 right-8 h-8 rounded-full pointer-events-none"
+                  style={{ background: `${project.color}15`, filter: "blur(12px)" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
+  );
+}
+
+export default function Projects() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  return (
+    <section id="projects">
+      {/* Section header — scrolls normally above the stack */}
+      <div className="py-20 text-center">
+        <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
+          Portfolio
+        </p>
+        <h2 className="text-4xl sm:text-5xl font-bold text-white">
+          Featured{" "}
+          <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+            Projects
+          </span>
+        </h2>
+        <p className="mt-4 text-slate-500">Real products shipped to production.</p>
+      </div>
+
+      {/* Stacked cards container */}
+      <div ref={containerRef} style={{ height: `${projects.length * 100}vh` }}>
+        {projects.map((project, i) => (
+          <StackedCard
+            key={project.id}
+            project={project}
+            index={i}
+            total={projects.length}
+            scrollYProgress={scrollYProgress}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

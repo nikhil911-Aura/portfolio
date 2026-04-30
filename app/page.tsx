@@ -29,26 +29,80 @@ import CommandPalette from "@/components/CommandPalette";
 import EasterEgg from "@/components/EasterEgg";
 import RobotAvatar from "@/components/RobotAvatar";
 import ChatWidget from "@/components/ChatWidget";
+import NoiseGrain from "@/components/NoiseGrain";
+import SectionDots from "@/components/SectionDots";
 
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false });
+
+// Subtle bg tints per section — barely perceptible, feels like the page breathes
+const BG_TINTS: Record<string, string> = {
+  hero:       "rgba(147,51,234,0)",
+  about:      "rgba(147,51,234,0.012)",
+  skills:     "rgba(6,182,212,0.012)",
+  experience: "rgba(147,51,234,0.010)",
+  projects:   "rgba(0,0,0,0)",
+  github:     "rgba(6,182,212,0.008)",
+  contact:    "rgba(147,51,234,0.015)",
+};
 
 export default function Home() {
   const [commandOpen, setCommandOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Lenis smooth scroll + GSAP ScrollTrigger sync
+  // ── Lenis smooth scroll ──
   useEffect(() => {
     let lenis: import("lenis").default | null = null;
+
     import("lenis").then(({ default: Lenis }) => {
-      lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+      lenis = new Lenis({
+        duration: 1.4,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 0.85,
+        touchMultiplier: 1.5,
+        infinite: false,
+      } as ConstructorParameters<typeof Lenis>[0]);
+
+      // Sync GSAP ScrollTrigger
       lenis.on("scroll", ScrollTrigger.update);
+
+      // Velocity blur — subtle motion feel when scrolling fast
+      lenis.on("scroll", ({ velocity }: { velocity: number }) => {
+        const blur = Math.min(Math.abs(velocity) * 0.18, 1.2);
+        const mainEl = document.getElementById("main-content");
+        if (mainEl) {
+          mainEl.style.filter = blur > 0.1 ? `blur(${blur.toFixed(2)}px)` : "";
+        }
+      });
+
       gsap.ticker.add((time) => lenis!.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
       window.addEventListener("load", () => ScrollTrigger.refresh());
     });
+
     return () => {
       if (lenis) lenis.destroy();
     };
+  }, []);
+
+  // ── Background breathing ──
+  useEffect(() => {
+    const bgOverlay = document.getElementById("bg-tint-overlay");
+    if (!bgOverlay) return;
+
+    const sections = Object.keys(BG_TINTS);
+    const triggers = sections.map((id) => {
+      const tint = BG_TINTS[id];
+      return ScrollTrigger.create({
+        trigger: `#${id}`,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => gsap.to(bgOverlay, { background: tint, duration: 1.2, ease: "power2.out" }),
+        onEnterBack: () => gsap.to(bgOverlay, { background: tint, duration: 1.2, ease: "power2.out" }),
+      });
+    });
+
+    return () => triggers.forEach((t) => t.kill());
   }, []);
 
   useEffect(() => {
@@ -71,16 +125,25 @@ export default function Home() {
 
   return (
     <>
+      {/* Background tint overlay — breathes between sections */}
+      <div
+        id="bg-tint-overlay"
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 0, transition: "background 0s" }}
+      />
+
       <LoadingScreen />
       <CursorGlow />
       <ScrollProgress />
+      <SectionDots />
       <Navigation onCommandPalette={() => setCommandOpen(true)} />
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <EasterEgg />
+      <NoiseGrain />
       <RobotAvatar />
       <ChatWidget />
 
-      <main className="relative min-h-screen">
+      <main id="main-content" className="relative min-h-screen" style={{ zIndex: 1 }}>
         <Hero />
         <TrustBar />
         <About />
