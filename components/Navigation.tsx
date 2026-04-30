@@ -178,17 +178,26 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
               <span>⌘K</span>
             </motion.button>
 
-            {/* Hire me button */}
+            {/* Hire me button — shimmer sweep */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollTo("#contact")}
-              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-300"
+              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-300 relative overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, #9333ea, #3b82f6)",
                 boxShadow: "0 0 20px rgba(147,51,234,0.3)",
               }}
             >
+              <motion.span
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%)",
+                  backgroundSize: "200% 100%",
+                }}
+                animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
+                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 0.5, ease: "linear" }}
+              />
               Hire Me
             </motion.button>
 

@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Terminal } from "lucide-react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 import LoadingScreen from "@/components/LoadingScreen";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -29,6 +35,21 @@ const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false
 export default function Home() {
   const [commandOpen, setCommandOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Lenis smooth scroll + GSAP ScrollTrigger sync
+  useEffect(() => {
+    let lenis: import("lenis").default | null = null;
+    import("lenis").then(({ default: Lenis }) => {
+      lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis!.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+      window.addEventListener("load", () => ScrollTrigger.refresh());
+    });
+    return () => {
+      if (lenis) lenis.destroy();
+    };
+  }, []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);

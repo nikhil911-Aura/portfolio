@@ -223,18 +223,18 @@ export default function RobotAvatar() {
       <div ref={constraintsRef} className="fixed inset-0 pointer-events-none z-[9980]" />
 
       <motion.div
-        drag={!isMobile}
-        dragConstraints={isMobile ? undefined : constraintsRef}
+        drag
+        dragConstraints={constraintsRef}
         dragMomentum={false}
         dragElastic={0.08}
-        whileDrag={isMobile ? undefined : { scale: 1.08, cursor: "grabbing" }}
+        whileDrag={{ scale: 1.08 }}
         initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 3, type: "spring", bounce: 0.5 }}
-        className="fixed z-[9981] select-none"
-        style={{ bottom: 96, left: 24, cursor: isMobile ? "pointer" : "grab" }}
-        onHoverStart={() => !isMobile && setHovered(true)}
-        onHoverEnd={() => !isMobile && setHovered(false)}
+        className="fixed z-[9981] select-none touch-none"
+        style={{ bottom: 96, left: 24, cursor: "grab" }}
+        onHoverStart={() => setHovered(true)}
+        onHoverEnd={() => setHovered(false)}
         onClick={handleClick}
       >
         {/* Speech bubble */}
