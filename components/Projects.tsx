@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { ExternalLink, Star } from "lucide-react";
 import { GithubIcon } from "./icons";
@@ -16,6 +17,8 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Socket.io", "Razorpay", "JWT"],
     color: "#9333ea",
     featured: true,
+    bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1400&q=85",
+    mockupImage: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=700&q=80",
   },
   {
     id: 2,
@@ -27,6 +30,8 @@ const projects = [
     tech: ["Next.js", "OpenAI API", "TypeScript", "Tailwind CSS", "Framer Motion"],
     color: "#06b6d4",
     featured: true,
+    bgImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1400&q=85",
+    mockupImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=700&q=80",
   },
   {
     id: 3,
@@ -38,6 +43,8 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "Stripe", "Nodemailer"],
     color: "#3b82f6",
     featured: false,
+    bgImage: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1400&q=85",
+    mockupImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=700&q=80",
   },
   {
     id: 4,
@@ -49,6 +56,8 @@ const projects = [
     tech: ["Next.js", "Prisma", "PostgreSQL", "TypeScript", "Tailwind CSS"],
     color: "#ec4899",
     featured: false,
+    bgImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85",
+    mockupImage: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=700&q=80",
   },
 ];
 
@@ -61,6 +70,8 @@ interface Project {
   tech: string[];
   color: string;
   featured: boolean;
+  bgImage: string;
+  mockupImage: string;
 }
 
 interface StackedCardProps {
@@ -71,18 +82,18 @@ interface StackedCardProps {
 }
 
 function StackedCard({ project, index, total, scrollYProgress }: StackedCardProps) {
-  const n = total; // 4
+  const [isHovered, setIsHovered] = useState(false);
+  const n = total;
 
-  // Clip-path: this card wipes in from below
-  // Card 0 is already visible. Cards 1-3 wipe in.
-  const clipFrom = index === 0 ? "inset(0% 0 0% 0)" : "inset(100% 0 0% 0)";
-  const clipRange =
+  // Clip-path wipe in — clips from bottom so title (top) reveals first
+  const clipFrom = index === 0 ? "inset(0% 0 0% 0)" : "inset(0% 0 100% 0)";
+  const clipRange: [number, number] =
     index === 0
-      ? ([0, 0.001] as [number, number])
-      : ([Math.max(0, index / n - 0.02), index / n + 0.07] as [number, number]);
+      ? [0, 0.001]
+      : [Math.max(0, index / n - 0.02), index / n + 0.07];
   const clipPath = useTransform(scrollYProgress, clipRange, [clipFrom, "inset(0% 0 0% 0)"]);
 
-  // Scale and y: this card gets pushed back when the NEXT card enters
+  // Scale and y when next card enters
   const nextStart = (index + 1) / n;
   const scaleRange: [number, number] =
     index === n - 1 ? [0.99, 1] : [nextStart - 0.01, nextStart + 0.1];
@@ -93,6 +104,11 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
 
   const scale = useTransform(scrollYProgress, scaleRange, scaleValues);
   const y = useTransform(scrollYProgress, yRange, yValues);
+
+  // Background image parallax — moves up as card is active
+  const bgStart = index / n;
+  const bgEnd = Math.min(1, (index + 1) / n);
+  const bgY = useTransform(scrollYProgress, [bgStart, bgEnd], ["0%", "-22%"]);
 
   return (
     <motion.div
@@ -107,34 +123,75 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
         overflow: "hidden",
       }}
     >
-      {/* Full viewport card content */}
-      <div
-        className="w-full h-full relative flex items-center"
-        style={{ background: "var(--bg)" }}
-      >
-        {/* Giant project number watermark */}
-        <div
-          className="absolute select-none pointer-events-none font-black"
+      {/* Full-bleed background image */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
           style={{
-            right: "4vw",
-            bottom: "4vh",
-            fontSize: "clamp(8rem, 22vw, 20rem)",
-            lineHeight: 1,
-            color: "rgba(255,255,255,0.018)",
-            fontFamily: "monospace",
+            y: bgY,
+            position: "absolute",
+            top: "-15%",
+            left: 0,
+            right: 0,
+            bottom: "-15%",
           }}
         >
-          {String(index + 1).padStart(2, "0")}
-        </div>
-
-        {/* Top accent bar */}
+          <img
+            src={project.bgImage}
+            alt=""
+            className="w-full h-full object-cover"
+            style={{
+              filter: isHovered
+                ? "grayscale(0%) brightness(0.5)"
+                : "grayscale(100%) brightness(0.22)",
+              transition: "filter 0.6s ease",
+            }}
+          />
+        </motion.div>
+        {/* Content overlay gradient */}
         <div
-          className="absolute top-0 left-0 right-0 h-px"
+          className="absolute inset-0"
           style={{
-            background: `linear-gradient(90deg, transparent, ${project.color}50, transparent)`,
+            background: `linear-gradient(135deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.45) 100%)`,
           }}
         />
+        {/* Color accent from project color */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at 80% 50%, ${project.color}08 0%, transparent 60%)`,
+          }}
+        />
+      </div>
 
+      {/* Giant watermark */}
+      <div
+        className="absolute select-none pointer-events-none font-black"
+        style={{
+          right: "4vw",
+          bottom: "4vh",
+          fontSize: "clamp(8rem, 22vw, 20rem)",
+          lineHeight: 1,
+          color: "rgba(255,255,255,0.018)",
+          fontFamily: "monospace",
+        }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </div>
+
+      {/* Top accent bar */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${project.color}60, transparent)`,
+        }}
+      />
+
+      {/* Card content */}
+      <div
+        className="w-full h-full relative flex items-center"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left: project info */}
@@ -207,8 +264,8 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-colors"
                   style={{
-                    background: "var(--card-bg)",
-                    border: "1px solid var(--card-border)",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.1)",
                   }}
                 >
                   <GithubIcon size={14} />
@@ -216,56 +273,48 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
               </div>
             </div>
 
-            {/* Right: decorative glass panel */}
+            {/* Right: mockup image */}
             <div className="hidden lg:flex items-center justify-center">
-              <div className="relative w-full" style={{ maxWidth: 420 }}>
+              <div className="relative w-full" style={{ maxWidth: 440 }}>
                 <div
-                  className="rounded-2xl relative overflow-hidden"
-                  style={{
-                    aspectRatio: "16/10",
-                    background: `${project.color}05`,
-                    border: `1px solid ${project.color}25`,
-                    boxShadow: `0 0 80px ${project.color}10, inset 0 1px 0 rgba(255,255,255,0.04)`,
-                  }}
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "16/10" }}
                 >
+                  <img
+                    src={project.mockupImage}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    style={{
+                      filter: isHovered
+                        ? "grayscale(0%) brightness(0.95)"
+                        : "grayscale(100%) brightness(0.6)",
+                      transition: "filter 0.6s ease",
+                    }}
+                  />
+                  {/* Subtle frame tint */}
                   <div
                     className="absolute inset-0"
                     style={{
-                      background: `radial-gradient(ellipse at 25% 35%, ${project.color}25 0%, transparent 55%), radial-gradient(ellipse at 75% 70%, ${project.color}12 0%, transparent 50%)`,
+                      background: `linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.5) 100%), linear-gradient(135deg, ${project.color}08 0%, transparent 50%)`,
                     }}
                   />
-                  {/* Tech stack grid */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-3 p-8">
-                      {project.tech.slice(0, 6).map((t, ti) => (
-                        <div
-                          key={ti}
-                          className="text-xs font-mono font-semibold text-center px-2 py-1.5 rounded-lg"
-                          style={{
-                            background: "rgba(255,255,255,0.04)",
-                            border: "1px solid rgba(255,255,255,0.07)",
-                            color: "rgba(255,255,255,0.5)",
-                          }}
-                        >
-                          {t}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Corner glow */}
+                  {/* Corner accent dot */}
                   <div
                     className="absolute top-3 right-3 w-2 h-2 rounded-full"
                     style={{
                       background: project.color,
                       boxShadow: `0 0 8px ${project.color}`,
+                      opacity: isHovered ? 1 : 0.4,
+                      transition: "opacity 0.6s ease",
                     }}
                   />
                 </div>
-                {/* Shadow below */}
-                <div
-                  className="absolute -bottom-4 left-8 right-8 h-8 rounded-full pointer-events-none"
-                  style={{ background: `${project.color}15`, filter: "blur(12px)" }}
-                />
+                <div className="mt-2 flex items-center justify-between px-0.5">
+                  <span className="text-xs font-mono text-slate-500">{project.title}</span>
+                  <span className="text-xs font-mono text-slate-600">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -284,14 +333,21 @@ export default function Projects() {
 
   return (
     <section id="projects">
-      {/* Section header — scrolls normally above the stack */}
+      {/* Section header */}
       <div className="py-20 text-center">
         <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
           Portfolio
         </p>
         <h2 className="text-4xl sm:text-5xl font-bold text-white">
           Featured{" "}
-          <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <span
+            style={{
+              background: "linear-gradient(135deg, #c084fc, #22d3ee)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             Projects
           </span>
         </h2>

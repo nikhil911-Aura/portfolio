@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
-import dynamic from "next/dynamic";
+import { motion, useInView, useScroll, useTransform, type Variants } from "framer-motion";
 import { ArrowRight, Mail, ExternalLink, Rocket, Download } from "lucide-react";
 import { GithubIcon } from "./icons";
 import { TypeAnimation } from "react-type-animation";
@@ -12,11 +12,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-const ThreeScene = dynamic(() => import("./ThreeScene"), {
-  ssr: false,
-  loading: () => <div className="w-full h-full" />,
-});
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,14 +26,30 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
+const heroImages = [
+  "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&q=85",
+  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=85",
+  "https://images.unsplash.com/photo-1618477247222-acbde0ff6c2d?w=800&q=85",
+];
+
 export default function Hero() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+  const sectionRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const headlineRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const col1Y = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  const col2Y = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
+  const col3Y = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -47,7 +58,6 @@ export default function Hero() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Scroll departure — hero reacts as user scrolls away
   useEffect(() => {
     const ctx = gsap.context(() => {
       const section = document.getElementById("hero");
@@ -61,7 +71,6 @@ export default function Hero() {
         onUpdate: (self) => {
           const p = self.progress;
 
-          // Headline drifts up and fades
           if (headlineRef.current) {
             gsap.set(headlineRef.current, {
               y: -p * 70,
@@ -69,7 +78,6 @@ export default function Hero() {
             });
           }
 
-          // Stats row rotates on Y axis and fades (like a flip board)
           if (statsRef.current) {
             gsap.set(statsRef.current, {
               rotateX: p * 25,
@@ -78,7 +86,6 @@ export default function Hero() {
             });
           }
 
-          // Status badge rises slightly faster
           if (badgeRef.current) {
             gsap.set(badgeRef.current, {
               y: -p * 40,
@@ -86,11 +93,8 @@ export default function Hero() {
             });
           }
 
-          // Grid parallax (slower than content)
           if (gridRef.current) {
-            gsap.set(gridRef.current, {
-              y: p * 30,
-            });
+            gsap.set(gridRef.current, { y: p * 30 });
           }
         },
       });
@@ -103,13 +107,22 @@ export default function Hero() {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const columns = [
+    { width: "35%", y: col1Y, src: heroImages[0] },
+    { width: "30%", y: col2Y, src: heroImages[1] },
+    { width: "35%", y: col3Y, src: heroImages[2] },
+  ];
+
   return (
     <section
       id="hero"
+      ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background layers */}
+      {/* Base background */}
       <div className="absolute inset-0" style={{ background: "var(--bg)" }} />
+
+      {/* Grid overlay */}
       <div
         ref={gridRef}
         className="absolute inset-0 opacity-40"
@@ -127,10 +140,79 @@ export default function Hero() {
         }}
       />
 
-      {/* Three.js canvas — right side, only on desktop */}
-      {!isMobile && (
-        <div className="absolute inset-0 lg:left-1/2">
-          <ThreeScene />
+      {/* Desktop: three vertical image columns on the right half */}
+      <div className="absolute inset-0 lg:left-[46%] hidden lg:block overflow-hidden">
+        <div className="relative flex h-full w-full" style={{ gap: "3px" }}>
+          {columns.map((col, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden"
+              style={{ width: col.width, flexShrink: 0 }}
+            >
+              <motion.div
+                style={{
+                  y: col.y,
+                  position: "absolute",
+                  top: "-25%",
+                  left: 0,
+                  right: 0,
+                  bottom: "-25%",
+                }}
+              >
+                <img
+                  src={col.src}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  style={{
+                    filter: "grayscale(100%) brightness(0.55)",
+                    transition: "filter 0.6s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.filter =
+                      "grayscale(0%) brightness(0.85)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.filter =
+                      "grayscale(100%) brightness(0.55)";
+                  }}
+                />
+              </motion.div>
+            </div>
+          ))}
+        </div>
+
+        {/* Left gradient — fades columns into content */}
+        <div
+          className="absolute inset-y-0 left-0 w-36 pointer-events-none"
+          style={{ background: "linear-gradient(to right, var(--bg), transparent)" }}
+        />
+        {/* Top gradient */}
+        <div
+          className="absolute inset-x-0 top-0 h-44 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, var(--bg), transparent)" }}
+        />
+        {/* Bottom gradient */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-52 pointer-events-none"
+          style={{ background: "linear-gradient(to top, var(--bg), transparent)" }}
+        />
+      </div>
+
+      {/* Mobile: single atmospheric background image */}
+      {isMobile && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <img
+            src={heroImages[1]}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: "grayscale(100%) brightness(0.2)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, var(--bg) 65%)",
+            }}
+          />
         </div>
       )}
 
@@ -157,9 +239,7 @@ export default function Hero() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500" />
                 </span>
-                <span className="text-purple-300">
-                  Open to opportunities — Available for hire
-                </span>
+                <span className="text-purple-300">Open to opportunities — Available for hire</span>
               </div>
             </motion.div>
 
@@ -216,9 +296,8 @@ export default function Hero() {
               variants={itemVariants}
               className="text-slate-400 text-lg leading-relaxed max-w-xl"
             >
-              I build scalable systems, automate workflows, and integrate AI into
-              real-world products. Passionate about cloud-native architecture and
-              developer tooling.
+              I build scalable systems, automate workflows, and integrate AI into real-world
+              products. Passionate about cloud-native architecture and developer tooling.
             </motion.p>
 
             {/* Current role */}
@@ -239,22 +318,13 @@ export default function Hero() {
             </motion.div>
 
             {/* CTA Buttons */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap gap-3 pt-2"
-            >
-              <MagneticButton
-                onClick={() => scrollToSection("#projects")}
-                primary
-              >
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-3 pt-2">
+              <MagneticButton onClick={() => scrollToSection("#projects")} primary>
                 <span>View Projects</span>
                 <ArrowRight size={16} />
               </MagneticButton>
 
-              <MagneticButton
-                href="https://github.com/Nick-ui911"
-                target="_blank"
-              >
+              <MagneticButton href="https://github.com/Nick-ui911" target="_blank">
                 <GithubIcon size={16} />
                 <span>GitHub</span>
                 <ExternalLink size={12} className="opacity-50" />
@@ -300,7 +370,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right side — Three.js fills this space on desktop */}
+          {/* Right side — image columns fill this space on desktop */}
           <div className="hidden lg:block" />
         </div>
       </div>

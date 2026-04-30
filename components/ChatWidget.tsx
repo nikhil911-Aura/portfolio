@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Loader2, Mail, Send, Sparkles, X } from "lucide-react";
+import { Bot, Loader2, Mail, Send, Sparkles, X, MessageSquare } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -11,10 +11,10 @@ interface Message {
 }
 
 const STARTERS = [
-  "What's Nikhil's tech stack?",
-  "Tell me about his projects",
-  "Is he available for hire?",
-  "What DevOps tools does he use?",
+  { text: "What's Nikhil's tech stack?", emoji: "⚡" },
+  { text: "Tell me about his projects", emoji: "🚀" },
+  { text: "Is he available for hire?", emoji: "💼" },
+  { text: "What DevOps tools does he use?", emoji: "🛠️" },
 ];
 
 const SESSION_KEY = "portfolio-chat-count";
@@ -29,9 +29,7 @@ function MarkdownMessage({ text }: { text: string }) {
     const parts = str.split(/\*\*(.+?)\*\*/g);
     return parts.map((p, i) =>
       i % 2 === 1 ? (
-        <strong key={i} className="text-white font-semibold">
-          {p}
-        </strong>
+        <strong key={i} className="text-white font-semibold">{p}</strong>
       ) : (
         p
       )
@@ -44,10 +42,10 @@ function MarkdownMessage({ text }: { text: string }) {
   const flushBullets = () => {
     if (bulletBuffer.length === 0) return;
     items.push(
-      <ul key={`ul-${items.length}`} className="flex flex-col gap-1 my-1 pl-1">
+      <ul key={`ul-${items.length}`} className="flex flex-col gap-1.5 my-1.5 pl-1">
         {bulletBuffer.map((b, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <span className="mt-1.5 w-1 h-1 rounded-full bg-purple-400 shrink-0" />
+          <li key={i} className="flex items-start gap-2.5">
+            <span className="mt-2 w-1 h-1 rounded-full bg-purple-400 shrink-0" />
             <span>{renderInline(b)}</span>
           </li>
         ))}
@@ -62,7 +60,11 @@ function MarkdownMessage({ text }: { text: string }) {
       bulletBuffer.push(stripped);
     } else {
       flushBullets();
-      items.push(<p key={`p-${items.length}`} className="leading-relaxed">{renderInline(line)}</p>);
+      items.push(
+        <p key={`p-${items.length}`} className="leading-relaxed">
+          {renderInline(line)}
+        </p>
+      );
     }
   }
   flushBullets();
@@ -75,17 +77,17 @@ function ContactButton({ onNavigate }: { onNavigate: () => void }) {
     <motion.button
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.25 }}
+      transition={{ delay: 0.2 }}
       onClick={onNavigate}
-      className="mt-2.5 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium text-white w-fit"
+      className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white w-fit"
       style={{
         background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-        boxShadow: "0 4px 16px rgba(147,51,234,0.35)",
+        boxShadow: "0 4px 16px rgba(147,51,234,0.4)",
       }}
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.96 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
-      <Mail size={12} />
+      <Mail size={11} />
       Open Contact Form →
     </motion.button>
   );
@@ -117,7 +119,7 @@ export default function ChatWidget() {
   }, []);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 200);
+    if (open) setTimeout(() => inputRef.current?.focus(), 220);
   }, [open]);
 
   useEffect(() => {
@@ -127,8 +129,7 @@ export default function ChatWidget() {
   const navigateToContact = () => {
     setOpen(false);
     setTimeout(() => {
-      const el = document.getElementById("contact");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
     }, 300);
   };
 
@@ -144,7 +145,6 @@ export default function ChatWidget() {
     setMsgCount(newCount);
     sessionStorage.setItem(SESSION_KEY, String(newCount));
 
-    // Detect contact intent — skip API, show navigation button
     if (CONTACT_INTENT.test(text.trim())) {
       setMessages((prev) => [
         ...prev,
@@ -189,8 +189,7 @@ export default function ChatWidget() {
         ...prev,
         {
           role: "assistant",
-          content:
-            "Sorry, something went wrong. Please email baghelnikhil911@gmail.com directly.",
+          content: "Sorry, something went wrong. Please email baghelnikhil911@gmail.com directly.",
         },
       ]);
     } finally {
@@ -207,61 +206,86 @@ export default function ChatWidget() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 16 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: "bottom right" }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 12 }}
-            transition={{ type: "spring", bounce: 0.25, duration: 0.35 }}
-            className="w-90 max-w-[calc(100vw-32px)] rounded-2xl overflow-hidden flex flex-col"
+            exit={{ opacity: 0, scale: 0.9, y: 16 }}
+            transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+            className="flex flex-col rounded-2xl overflow-hidden"
             style={{
-              height: 500,
-              background: "var(--card-bg)",
-              border: "1px solid var(--card-border)",
-              boxShadow: "0 25px 80px rgba(0,0,0,0.5), 0 0 50px rgba(147,51,234,0.1)",
-              backdropFilter: "blur(24px)",
+              width: 400,
+              maxWidth: "calc(100vw - 24px)",
+              height: 560,
+              background: "rgba(7, 3, 17, 0.97)",
+              border: "1px solid rgba(147,51,234,0.2)",
+              boxShadow:
+                "0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03), 0 0 60px rgba(147,51,234,0.08)",
+              backdropFilter: "blur(40px)",
             }}
           >
+            {/* Top gradient accent line */}
+            <div
+              className="h-px shrink-0"
+              style={{
+                background: "linear-gradient(90deg, transparent 0%, #9333ea 30%, #06b6d4 70%, transparent 100%)",
+              }}
+            />
+
             {/* Header */}
             <div
-              className="flex items-center gap-3 px-4 py-3 shrink-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(147,51,234,0.14), rgba(6,182,212,0.06))",
-                borderBottom: "1px solid var(--card-border)",
-              }}
+              className="flex items-center gap-3 px-5 py-4 shrink-0"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
             >
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: "linear-gradient(135deg, #9333ea, #06b6d4)" }}
-              >
-                <Bot size={14} className="text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">Ask about Nikhil</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-400" />
-                  </span>
-                  <span className="text-[10px] text-slate-500">
-                    Llama 3 · {provider === "groq" ? "Groq" : "Cerebras"} · {SESSION_LIMIT - msgCount} msgs left
-                  </span>
+              {/* Bot avatar with online indicator */}
+              <div className="relative shrink-0">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: "linear-gradient(135deg, #9333ea, #3b82f6)",
+                    boxShadow: "0 0 20px rgba(147,51,234,0.4)",
+                  }}
+                >
+                  <Bot size={17} className="text-white" />
                 </div>
+                <span className="absolute -bottom-0.5 -right-0.5 flex">
+                  <span className="absolute w-3 h-3 rounded-full bg-green-400 animate-ping opacity-50" />
+                  <span
+                    className="relative w-3 h-3 rounded-full bg-green-400"
+                    style={{ border: "1.5px solid rgba(7,3,17,0.97)" }}
+                  />
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-white leading-tight">Ask about Nikhil</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  {SESSION_LIMIT - msgCount} msgs left · Llama 3 ·{" "}
+                  <span style={{ color: provider === "groq" ? "#f97316" : "#06b6d4" }}>
+                    {provider === "groq" ? "Groq" : "Cerebras"}
+                  </span>
+                </p>
               </div>
 
               {/* Provider toggle */}
               <div
-                className="flex items-center rounded-lg p-0.5 shrink-0"
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
+                className="flex items-center gap-0.5 p-1 rounded-lg shrink-0"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                }}
               >
                 {PROVIDERS.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => setProvider(p.id)}
-                    className="px-2 py-1 rounded-md text-[10px] font-medium transition-all duration-200"
+                    className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all duration-200"
                     style={
                       provider === p.id
-                        ? { background: p.color, color: "#fff", boxShadow: `0 0 8px ${p.color}55` }
-                        : { color: "#64748b" }
+                        ? {
+                            background: `${p.color}20`,
+                            color: p.color,
+                            border: `1px solid ${p.color}35`,
+                          }
+                        : { color: "#475569" }
                     }
                   >
                     {p.label}
@@ -271,37 +295,84 @@ export default function ChatWidget() {
 
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg text-slate-500 hover:text-white transition-colors shrink-0"
+                className="p-1.5 rounded-lg transition-all duration-150 shrink-0"
+                style={{ color: "#475569" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "#e2e8f0";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "#475569";
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
               >
-                <X size={14} />
+                <X size={15} />
               </button>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 hide-scrollbar">
-              {/* Starter prompts */}
+            {/* Messages area */}
+            <div
+              className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {/* Empty state */}
               {messages.length === 0 && !streaming && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col gap-3"
+                  transition={{ delay: 0.1 }}
+                  className="flex flex-col gap-5"
                 >
-                  <p className="text-xs text-slate-500 text-center leading-relaxed">
-                    Hi! I can answer anything about Nikhil&apos;s experience, projects, and availability.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {STARTERS.map((q) => (
-                      <button
-                        key={q}
-                        onClick={() => send(q)}
-                        className="text-xs px-3 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all duration-200"
+                  {/* Welcome */}
+                  <div className="flex flex-col items-center text-center pt-2">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(147,51,234,0.18), rgba(6,182,212,0.1))",
+                        border: "1px solid rgba(147,51,234,0.25)",
+                        boxShadow: "0 0 30px rgba(147,51,234,0.1)",
+                      }}
+                    >
+                      <Sparkles size={22} className="text-purple-400" />
+                    </div>
+                    <p className="text-sm font-semibold text-white mb-1.5">
+                      Hi! I&apos;m Nikhil&apos;s AI assistant
+                    </p>
+                    <p className="text-xs text-slate-500 leading-relaxed max-w-55">
+                      Ask me anything about his experience, projects, skills, or availability.
+                    </p>
+                  </div>
+
+                  {/* Suggestion cards */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {STARTERS.map((s) => (
+                      <motion.button
+                        key={s.text}
+                        onClick={() => send(s.text)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="text-left p-3.5 rounded-xl transition-all duration-200"
                         style={{
-                          background: "rgba(147,51,234,0.08)",
-                          border: "1px solid rgba(147,51,234,0.22)",
+                          background: "rgba(147,51,234,0.06)",
+                          border: "1px solid rgba(147,51,234,0.15)",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "rgba(147,51,234,0.12)";
+                          (e.currentTarget as HTMLElement).style.borderColor =
+                            "rgba(147,51,234,0.3)";
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "rgba(147,51,234,0.06)";
+                          (e.currentTarget as HTMLElement).style.borderColor =
+                            "rgba(147,51,234,0.15)";
                         }}
                       >
-                        {q}
-                      </button>
+                        <span className="block text-base mb-1.5">{s.emoji}</span>
+                        <span className="text-xs text-slate-400 leading-snug">{s.text}</span>
+                      </motion.button>
                     ))}
                   </div>
                 </motion.div>
@@ -311,24 +382,40 @@ export default function ChatWidget() {
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 6 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  transition={{ duration: 0.2 }}
+                  className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
+                  {msg.role === "assistant" && (
+                    <div
+                      className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                      style={{
+                        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
+                        boxShadow: "0 0 12px rgba(147,51,234,0.3)",
+                      }}
+                    >
+                      <Bot size={12} className="text-white" />
+                    </div>
+                  )}
+
                   <div
-                    className={`max-w-[86%] px-3.5 py-2.5 text-sm leading-relaxed ${
-                      msg.role === "user" ? "rounded-2xl rounded-tr-sm" : "rounded-2xl rounded-tl-sm"
+                    className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed ${
+                      msg.role === "user"
+                        ? "rounded-2xl rounded-br-sm"
+                        : "rounded-2xl rounded-bl-sm"
                     }`}
                     style={
                       msg.role === "user"
                         ? {
                             background: "linear-gradient(135deg, #9333ea, #7c3aed)",
                             color: "#fff",
+                            boxShadow: "0 4px 20px rgba(147,51,234,0.25)",
                           }
                         : {
                             background: "rgba(255,255,255,0.05)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                            color: "var(--text)",
+                            border: "1px solid rgba(255,255,255,0.07)",
+                            color: "#cbd5e1",
                           }
                     }
                   >
@@ -344,19 +431,25 @@ export default function ChatWidget() {
                 </motion.div>
               ))}
 
-              {/* Streaming message */}
+              {/* Streaming */}
               {streaming && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
+                  className="flex gap-2.5 justify-start"
                 >
                   <div
-                    className="max-w-[86%] px-3.5 py-2.5 rounded-2xl rounded-tl-sm text-sm leading-relaxed"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ background: "linear-gradient(135deg, #9333ea, #3b82f6)" }}
+                  >
+                    <Bot size={12} className="text-white" />
+                  </div>
+                  <div
+                    className="max-w-[80%] px-4 py-3 rounded-2xl rounded-bl-sm text-sm"
                     style={{
                       background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "var(--text)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      color: "#cbd5e1",
                     }}
                   >
                     {streamContent ? (
@@ -384,16 +477,14 @@ export default function ChatWidget() {
                 </motion.div>
               )}
 
-              {/* Session limit message */}
+              {/* Limit reached */}
               {limitReached && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex flex-col items-center gap-2 mt-1"
+                  className="flex flex-col items-center gap-2 py-2"
                 >
-                  <p className="text-center text-xs text-slate-500">
-                    Session limit reached.
-                  </p>
+                  <p className="text-xs text-slate-600">Session limit reached.</p>
                   <button
                     onClick={navigateToContact}
                     className="flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 transition-colors"
@@ -407,18 +498,19 @@ export default function ChatWidget() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Input */}
+            {/* Input area */}
             <div
-              className="px-3 py-3 shrink-0"
-              style={{ borderTop: "1px solid var(--card-border)" }}
+              className="px-4 pb-4 pt-3 shrink-0"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
             >
               <div
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all duration-200"
+                className="flex items-center gap-2.5 px-4 py-3 rounded-xl transition-all duration-200"
                 style={{
-                  background: "var(--input-bg)",
-                  border: "1px solid var(--card-border)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.07)",
                 }}
               >
+                <MessageSquare size={14} className="text-slate-700 shrink-0" />
                 <input
                   ref={inputRef}
                   value={input}
@@ -431,24 +523,30 @@ export default function ChatWidget() {
                   }}
                   placeholder={limitReached ? "Session limit reached" : "Ask something..."}
                   disabled={limitReached || streaming}
-                  className="flex-1 text-sm bg-transparent focus:outline-none placeholder-slate-600 disabled:opacity-40"
-                  style={{ color: "var(--text)" }}
+                  className="flex-1 text-sm bg-transparent focus:outline-none disabled:opacity-40"
+                  style={{ color: "#e2e8f0" }}
                 />
                 <motion.button
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.92 }}
                   onClick={() => send(input)}
                   disabled={!input.trim() || streaming || limitReached}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center disabled:opacity-35 transition-opacity shrink-0"
-                  style={{ background: "linear-gradient(135deg, #9333ea, #3b82f6)" }}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-30 shrink-0 transition-opacity"
+                  style={{
+                    background: "linear-gradient(135deg, #9333ea, #3b82f6)",
+                    boxShadow: "0 0 16px rgba(147,51,234,0.35)",
+                  }}
                 >
                   {streaming ? (
-                    <Loader2 size={12} className="text-white animate-spin" />
+                    <Loader2 size={13} className="text-white animate-spin" />
                   ) : (
-                    <Send size={12} className="text-white" />
+                    <Send size={13} className="text-white" />
                   )}
                 </motion.button>
               </div>
+              <p className="text-center text-[10px] text-slate-800 mt-2">
+                Powered by Llama 3 via {provider === "groq" ? "Groq" : "Cerebras"}
+              </p>
             </div>
           </motion.div>
         )}
@@ -459,26 +557,25 @@ export default function ChatWidget() {
         {!open && (
           <motion.div
             key="fab-label"
-            initial={{ opacity: 0, x: 16, scale: 0.88 }}
+            initial={{ opacity: 0, x: 12, scale: 0.88 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 12, scale: 0.88 }}
+            exit={{ opacity: 0, x: 10, scale: 0.88 }}
             transition={{ type: "spring", bounce: 0.35, duration: 0.4, delay: 0.1 }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-none self-end mb-1"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full pointer-events-none self-end mb-1"
             style={{
-              background: "rgba(10,4,20,0.88)",
-              border: "1px solid rgba(147,51,234,0.45)",
-              backdropFilter: "blur(12px)",
-              boxShadow: "0 4px 20px rgba(147,51,234,0.2)",
+              background: "rgba(7,3,17,0.92)",
+              border: "1px solid rgba(147,51,234,0.4)",
+              backdropFilter: "blur(16px)",
+              boxShadow: "0 4px 24px rgba(147,51,234,0.18)",
             }}
           >
             <motion.span
               animate={{ rotate: [0, 15, -10, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
-              style={{ color: "#c084fc" }}
             >
-              <Sparkles size={11} />
+              <Sparkles size={11} className="text-purple-400" />
             </motion.span>
-            <span className="text-xs font-medium whitespace-nowrap" style={{ color: "#fff" }}>Ask AI</span>
+            <span className="text-xs font-semibold text-white whitespace-nowrap">Ask AI</span>
             <span
               className="w-1.5 h-1.5 rounded-full bg-green-400"
               style={{ boxShadow: "0 0 6px #4ade80" }}
@@ -487,29 +584,34 @@ export default function ChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* ── Toggle button ── */}
+      {/* ── Toggle FAB ── */}
       <motion.button
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
         onClick={() => setOpen((o) => !o)}
         className="w-14 h-14 rounded-2xl flex items-center justify-center text-white relative"
         style={{
           background: open
-            ? "rgba(20,8,40,0.95)"
+            ? "rgba(15,6,35,0.98)"
             : "linear-gradient(135deg, #9333ea 0%, #6366f1 50%, #3b82f6 100%)",
-          border: "1px solid rgba(147,51,234,0.5)",
+          border: "1px solid rgba(147,51,234,0.4)",
           boxShadow: open
-            ? "0 8px 30px rgba(147,51,234,0.2)"
-            : "0 8px 32px rgba(147,51,234,0.5), 0 0 0 1px rgba(99,102,241,0.2)",
+            ? "0 8px 30px rgba(0,0,0,0.4)"
+            : "0 8px 32px rgba(147,51,234,0.55), 0 0 0 1px rgba(99,102,241,0.15)",
         }}
         aria-label="Toggle AI chat"
       >
-        {/* Animated ring */}
+        {/* Pulse ring */}
         {!open && (
           <motion.span
             className="absolute inset-0 rounded-2xl"
-            animate={{ boxShadow: ["0 0 0 0px rgba(147,51,234,0.4)", "0 0 0 8px rgba(147,51,234,0)"] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+            animate={{
+              boxShadow: [
+                "0 0 0 0px rgba(147,51,234,0.45)",
+                "0 0 0 10px rgba(147,51,234,0)",
+              ],
+            }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
           />
         )}
 
@@ -520,7 +622,7 @@ export default function ChatWidget() {
               initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
               animate={{ rotate: 0, opacity: 1, scale: 1 }}
               exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.18 }}
+              transition={{ duration: 0.2 }}
               style={{ display: "block" }}
             >
               <X size={20} />
@@ -531,25 +633,31 @@ export default function ChatWidget() {
               initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
               animate={{ rotate: 0, opacity: 1, scale: 1 }}
               exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.18 }}
+              transition={{ duration: 0.2 }}
               style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
             >
-              {/* Custom AI icon — brain with sparkle */}
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2C9.5 2 7.5 3.5 7 5.5C5.5 5.8 4 7.2 4 9C4 10.1 4.5 11.1 5.3 11.8C5.1 12.2 5 12.6 5 13C5 14.9 6.6 16.4 8.5 16.5C9 17.4 10 18 11 18.2V20H9V22H15V20H13V18.2C14 18 15 17.4 15.5 16.5C17.4 16.4 19 14.9 19 13C19 12.6 18.9 12.2 18.7 11.8C19.5 11.1 20 10.1 20 9C20 7.2 18.5 5.8 17 5.5C16.5 3.5 14.5 2 12 2Z" fill="rgba(255,255,255,0.15)" stroke="white" strokeWidth="1.2" strokeLinejoin="round"/>
-                <motion.circle cx="9.5" cy="9.5" r="1.2" fill="white" />
-                <motion.circle cx="14.5" cy="9.5" r="1.2" fill="white" />
-                <path d="M9.5 13C9.5 13 10.5 14 12 14C13.5 14 14.5 13 14.5 13" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+                <path
+                  d="M12 2C9.5 2 7.5 3.5 7 5.5C5.5 5.8 4 7.2 4 9C4 10.1 4.5 11.1 5.3 11.8C5.1 12.2 5 12.6 5 13C5 14.9 6.6 16.4 8.5 16.5C9 17.4 10 18 11 18.2V20H9V22H15V20H13V18.2C14 18 15 17.4 15.5 16.5C17.4 16.4 19 14.9 19 13C19 12.6 18.9 12.2 18.7 11.8C19.5 11.1 20 10.1 20 9C20 7.2 18.5 5.8 17 5.5C16.5 3.5 14.5 2 12 2Z"
+                  fill="rgba(255,255,255,0.12)"
+                  stroke="white"
+                  strokeWidth="1.2"
+                  strokeLinejoin="round"
+                />
+                <circle cx="9.5" cy="9.5" r="1.2" fill="white" />
+                <circle cx="14.5" cy="9.5" r="1.2" fill="white" />
+                <path d="M9.5 13C9.5 13 10.5 14 12 14C13.5 14 14.5 13 14.5 13" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
               </svg>
             </motion.span>
           )}
         </AnimatePresence>
 
-        {/* Pulse dot — only before first message */}
+        {/* Notification dot */}
         {!open && messages.length === 0 && (
           <motion.span
-            className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-[#050507]"
-            animate={{ scale: [1, 1.4, 1] }}
+            className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-green-400"
+            style={{ border: "2px solid rgba(7,3,17,1)" }}
+            animate={{ scale: [1, 1.35, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
         )}

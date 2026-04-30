@@ -34,15 +34,15 @@ import SectionDots from "@/components/SectionDots";
 
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false });
 
-// Subtle bg tints per section — barely perceptible, feels like the page breathes
+// Section bg breathing — each section shifts to its own dark tone
 const BG_TINTS: Record<string, string> = {
-  hero:       "rgba(147,51,234,0)",
-  about:      "rgba(147,51,234,0.012)",
-  skills:     "rgba(6,182,212,0.012)",
-  experience: "rgba(147,51,234,0.010)",
-  projects:   "rgba(0,0,0,0)",
-  github:     "rgba(6,182,212,0.008)",
-  contact:    "rgba(147,51,234,0.015)",
+  hero:       "#0a0a0f",
+  about:      "#0a0c0f",
+  skills:     "#0c0a0f",
+  experience: "#0a0a0a",
+  projects:   "#0a0a0a",
+  github:     "#0a0c0a",
+  contact:    "#0a0a0f",
 };
 
 export default function Home() {
@@ -66,12 +66,12 @@ export default function Home() {
       // Sync GSAP ScrollTrigger
       lenis.on("scroll", ScrollTrigger.update);
 
-      // Velocity blur — subtle motion feel when scrolling fast
+      // Velocity blur — more aggressive motion blur when scrolling fast
       lenis.on("scroll", ({ velocity }: { velocity: number }) => {
-        const blur = Math.min(Math.abs(velocity) * 0.18, 1.2);
+        const blur = Math.min(Math.abs(velocity) * 0.4, 3);
         const mainEl = document.getElementById("main-content");
         if (mainEl) {
-          mainEl.style.filter = blur > 0.1 ? `blur(${blur.toFixed(2)}px)` : "";
+          mainEl.style.filter = blur > 0.15 ? `blur(${blur.toFixed(2)}px)` : "";
         }
       });
 
@@ -129,7 +129,7 @@ export default function Home() {
       <div
         id="bg-tint-overlay"
         className="fixed inset-0 pointer-events-none"
-        style={{ zIndex: 0, transition: "background 0s" }}
+        style={{ zIndex: 0, transition: "background 0s", background: "#0a0a0f" }}
       />
 
       <LoadingScreen />

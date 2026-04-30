@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useRef, useState } from "react";
@@ -75,6 +76,23 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative py-24 overflow-hidden">
+      {/* Full-bleed background image */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img
+          src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1400&q=85"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "grayscale(100%) brightness(0.18)" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, var(--bg) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.3) 60%, var(--bg) 100%)",
+          }}
+        />
+      </div>
+
       {/* Glow */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"

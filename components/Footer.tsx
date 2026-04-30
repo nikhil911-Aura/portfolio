@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { motion } from "framer-motion";
@@ -10,18 +11,54 @@ const links = [
   { label: "DevWorld", href: "https://www.devworld.in/" },
 ];
 
+const footerImages = [
+  "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=500&q=75",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500&q=75",
+  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&q=75",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=75",
+];
+
 export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="relative py-12 mt-12 overflow-hidden">
-      {/* Top border gradient */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{
-          background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.3), rgba(6,182,212,0.3), transparent)",
-        }}
-      />
+    <footer className="relative mt-12 overflow-hidden">
+      {/* Image strip */}
+      <div className="flex h-40 overflow-hidden">
+        {footerImages.map((src, i) => (
+          <div key={i} className="relative overflow-hidden flex-1">
+            <img
+              src={src}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                filter: "grayscale(100%) brightness(0.65)",
+                transition: "filter 0.6s ease, transform 0.6s ease",
+                transform: "scale(1.06)",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLImageElement;
+                el.style.filter = "grayscale(0%) brightness(0.95)";
+                el.style.transform = "scale(1)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLImageElement;
+                el.style.filter = "grayscale(100%) brightness(0.65)";
+                el.style.transform = "scale(1.06)";
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="relative py-12">
+        {/* Top border gradient */}
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.3), rgba(6,182,212,0.3), transparent)",
+          }}
+        />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -87,6 +124,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Nikhil Singh. Built with Next.js, Framer Motion &amp; Three.js.
           </p>
         </div>
+      </div>
       </div>
     </footer>
   );

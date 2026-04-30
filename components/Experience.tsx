@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useRef, useEffect } from "react";
@@ -20,6 +21,7 @@ const experiences = [
     location: "Indore (On-site)",
     current: true,
     color: "#9333ea",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80",
     highlights: [
       "Building scalable full-stack applications using MERN stack with focus on performance and maintainability",
       "Developing AI-assisted automation workflows and third-party integrations using n8n and GenAI APIs",
@@ -38,6 +40,7 @@ const experiences = [
     location: "Indore",
     current: false,
     color: "#3b82f6",
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80",
     highlights: [
       "Improved React application performance by 20% through memoization, lazy loading, and code splitting",
       "Implemented Redux-based state management architecture for complex multi-step user flows",
@@ -256,58 +259,94 @@ export default function Experience() {
                   )}
 
                   <div className="p-6">
-                    {/* Header */}
-                    <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+                    <div className="grid lg:grid-cols-[1fr_220px] gap-6 items-start">
+                      {/* Left: all content */}
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-1">{exp.role}</h3>
-                        <div className="flex flex-wrap items-center gap-3">
-                          <span className="text-base font-semibold" style={{ color: exp.color }}>
-                            {exp.company}
-                          </span>
-                          <span
-                            className="text-xs px-2 py-0.5 rounded-full"
-                            style={{ background: `${exp.color}15`, color: exp.color, border: `1px solid ${exp.color}30` }}
-                          >
-                            {exp.type}
-                          </span>
+                        {/* Header */}
+                        <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+                          <div>
+                            <h3 className="text-xl font-bold text-white mb-1">{exp.role}</h3>
+                            <div className="flex flex-wrap items-center gap-3">
+                              <span className="text-base font-semibold" style={{ color: exp.color }}>
+                                {exp.company}
+                              </span>
+                              <span
+                                className="text-xs px-2 py-0.5 rounded-full"
+                                style={{ background: `${exp.color}15`, color: exp.color, border: `1px solid ${exp.color}30` }}
+                              >
+                                {exp.type}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-1">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                              <Calendar size={11} />
+                              <span>{exp.period}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                              <MapPin size={11} />
+                              <span>{exp.location}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Highlights */}
+                        <ul className="flex flex-col gap-2.5 mb-5">
+                          {exp.highlights.map((h) => (
+                            <li key={h} className="exp-bullet flex items-start gap-2.5 text-sm text-slate-400">
+                              <div
+                                className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
+                                style={{ backgroundColor: exp.color }}
+                              />
+                              {h}
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Tech badges */}
+                        <div className="flex flex-wrap gap-2">
+                          {exp.tech.map((t) => (
+                            <span
+                              key={t}
+                              className="text-xs px-2.5 py-1 rounded-lg"
+                              style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", color: "#94a3b8" }}
+                            >
+                              {t}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                          <Calendar size={11} />
-                          <span>{exp.period}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                          <MapPin size={11} />
-                          <span>{exp.location}</span>
-                        </div>
+
+                      {/* Right: company image */}
+                      <div
+                        className="hidden lg:block relative overflow-hidden self-stretch"
+                        style={{ minHeight: 180 }}
+                      >
+                        <img
+                          src={exp.image}
+                          alt={exp.company}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          style={{
+                            filter: "grayscale(100%) brightness(0.6)",
+                            transition: "filter 0.6s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLImageElement).style.filter =
+                              "grayscale(0%) brightness(0.9)";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLImageElement).style.filter =
+                              "grayscale(100%) brightness(0.6)";
+                          }}
+                        />
+                        {/* Bottom fade */}
+                        <div
+                          className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
+                          style={{
+                            background: "linear-gradient(to top, var(--card-bg), transparent)",
+                          }}
+                        />
                       </div>
-                    </div>
-
-                    {/* Highlights — each bullet reveals on scroll */}
-                    <ul className="flex flex-col gap-2.5 mb-5">
-                      {exp.highlights.map((h, j) => (
-                        <li key={h} className="exp-bullet flex items-start gap-2.5 text-sm text-slate-400">
-                          <div
-                            className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
-                            style={{ backgroundColor: exp.color }}
-                          />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Tech badges */}
-                    <div className="flex flex-wrap gap-2">
-                      {exp.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="text-xs px-2.5 py-1 rounded-lg"
-                          style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", color: "#94a3b8" }}
-                        >
-                          {t}
-                        </span>
-                      ))}
                     </div>
                   </div>
                 </div>

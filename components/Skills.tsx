@@ -1,14 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Layers, Server, Database, Cloud, Cpu } from "lucide-react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const skillCategories = [
   {
@@ -17,12 +11,13 @@ const skillCategories = [
     subtitle: "Interfaces people love to use",
     icon: Layers,
     color: "#3b82f6",
+    num: "01",
     skills: [
       { name: "React", level: 90 },
       { name: "Next.js", level: 88 },
       { name: "TypeScript", level: 85 },
-      { name: "Redux", level: 80 },
       { name: "Tailwind CSS", level: 92 },
+      { name: "Redux", level: 80 },
       { name: "Framer Motion", level: 75 },
     ],
   },
@@ -32,12 +27,13 @@ const skillCategories = [
     subtitle: "APIs and systems built to scale",
     icon: Server,
     color: "#9333ea",
+    num: "02",
     skills: [
       { name: "Node.js", level: 88 },
       { name: "Express.js", level: 85 },
       { name: "REST APIs", level: 90 },
-      { name: "GraphQL", level: 70 },
       { name: "WebSockets", level: 72 },
+      { name: "GraphQL", level: 70 },
       { name: "Microservices", level: 75 },
     ],
   },
@@ -47,12 +43,13 @@ const skillCategories = [
     subtitle: "Data stored and retrieved fast",
     icon: Database,
     color: "#06b6d4",
+    num: "03",
     skills: [
       { name: "MongoDB", level: 85 },
       { name: "PostgreSQL", level: 80 },
+      { name: "Mongoose", level: 85 },
       { name: "Prisma", level: 78 },
       { name: "Redis", level: 72 },
-      { name: "Mongoose", level: 85 },
     ],
   },
   {
@@ -61,13 +58,14 @@ const skillCategories = [
     subtitle: "Ship fast, stay reliable",
     icon: Cloud,
     color: "#ec4899",
+    num: "04",
     skills: [
       { name: "Docker", level: 85 },
       { name: "Kubernetes", level: 78 },
-      { name: "Helm", level: 72 },
-      { name: "ArgoCD", level: 70 },
       { name: "AWS", level: 75 },
       { name: "CI/CD", level: 82 },
+      { name: "Helm", level: 72 },
+      { name: "ArgoCD", level: 70 },
     ],
   },
   {
@@ -76,465 +74,446 @@ const skillCategories = [
     subtitle: "Building with intelligence",
     icon: Cpu,
     color: "#f59e0b",
+    num: "05",
     skills: [
+      { name: "OpenAI API", level: 82 },
       { name: "GenAI APIs", level: 80 },
+      { name: "Prompt Eng.", level: 78 },
       { name: "n8n", level: 75 },
       { name: "LangChain", level: 65 },
-      { name: "OpenAI API", level: 82 },
-      { name: "Prompt Eng.", level: 78 },
     ],
   },
 ];
 
-function proficiencyLabel(level: number) {
-  if (level >= 90) return "Expert";
-  if (level >= 80) return "Advanced";
-  if (level >= 70) return "Proficient";
-  return "Intermediate";
+function levelDots(level: number) {
+  const filled = Math.round(level / 25);
+  return Array.from({ length: 4 }, (_, i) => i < filled);
+}
+
+type Category = (typeof skillCategories)[0];
+
+function BentoCard({
+  cat,
+  animIndex,
+  className,
+}: {
+  cat: Category;
+  animIndex: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+  const Icon = cat.icon;
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width - 0.5;
+    const cy = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: cy * -7, y: cx * 7 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: animIndex * 0.1, duration: 0.55, ease: "easeOut" }}
+    >
+      <div
+        className="relative h-full rounded-2xl overflow-hidden p-6 cursor-default"
+        style={{
+          background: hovered ? `${cat.color}0e` : `${cat.color}07`,
+          border: `1px solid ${hovered ? cat.color + "2a" : cat.color + "14"}`,
+          boxShadow: hovered
+            ? `0 24px 60px ${cat.color}10, 0 0 0 1px ${cat.color}18`
+            : "none",
+          transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transition: hovered
+            ? "transform 0.07s linear, background 0.3s, border-color 0.3s, box-shadow 0.3s"
+            : "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), background 0.3s, border-color 0.3s, box-shadow 0.3s",
+          willChange: "transform",
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => {
+          setTilt({ x: 0, y: 0 });
+          setHovered(false);
+        }}
+      >
+        {/* Top accent line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-px transition-opacity duration-300"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${cat.color}${hovered ? "80" : "30"}, transparent)`,
+          }}
+        />
+
+        {/* Watermark number */}
+        <div
+          className="absolute right-4 bottom-2 select-none pointer-events-none font-black"
+          style={{
+            fontSize: "clamp(4rem, 8vw, 7.5rem)",
+            lineHeight: 1,
+            color: `${cat.color}${hovered ? "0d" : "06"}`,
+            fontFamily: "monospace",
+            transition: "color 0.3s",
+          }}
+        >
+          {cat.num}
+        </div>
+
+        {/* Ambient glow on hover */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-400"
+          style={{
+            background: `radial-gradient(ellipse at 30% 20%, ${cat.color}12 0%, transparent 65%)`,
+            opacity: hovered ? 1 : 0,
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 h-full flex flex-col">
+          {/* Header row */}
+          <div className="flex items-start justify-between mb-4">
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center"
+              style={{
+                background: `${cat.color}14`,
+                border: `1px solid ${cat.color}22`,
+                boxShadow: hovered ? `0 0 20px ${cat.color}20` : "none",
+                transition: "box-shadow 0.3s",
+              }}
+            >
+              <Icon size={20} style={{ color: cat.color }} />
+            </div>
+            <span
+              className="text-[10px] font-mono font-bold px-2 py-1 rounded-lg"
+              style={{
+                background: `${cat.color}0e`,
+                color: `${cat.color}99`,
+                border: `1px solid ${cat.color}18`,
+              }}
+            >
+              {cat.skills.length} skills
+            </span>
+          </div>
+
+          {/* Title + subtitle */}
+          <h3
+            className="text-lg xl:text-xl font-bold text-white leading-tight mb-1"
+            style={{
+              textShadow: hovered ? `0 0 24px ${cat.color}28` : "none",
+              transition: "text-shadow 0.3s",
+            }}
+          >
+            {cat.label}
+          </h3>
+          <p className="text-xs text-slate-600 mb-5 leading-relaxed">{cat.subtitle}</p>
+
+          {/* Skill pills */}
+          <div className="flex flex-wrap gap-1.5 mt-auto">
+            {cat.skills.map((skill, si) => (
+              <motion.span
+                key={skill.name}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{
+                  delay: animIndex * 0.1 + si * 0.045 + 0.25,
+                  duration: 0.3,
+                  ease: "backOut",
+                }}
+                className="text-xs px-2.5 py-1 rounded-lg font-medium"
+                style={{
+                  background: `${cat.color}0e`,
+                  border: `1px solid ${cat.color}20`,
+                  color: cat.color,
+                }}
+              >
+                {skill.name}
+              </motion.span>
+            ))}
+          </div>
+
+          {/* Level dots row */}
+          <div className="flex items-center gap-3 mt-4 pt-4" style={{ borderTop: `1px solid ${cat.color}0f` }}>
+            <div className="flex items-center gap-1">
+              {levelDots(
+                Math.round(cat.skills.reduce((s, sk) => s + sk.level, 0) / cat.skills.length)
+              ).map((filled, i) => (
+                <div
+                  key={i}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: filled ? 18 : 6,
+                    height: 4,
+                    background: filled ? cat.color : `${cat.color}22`,
+                    boxShadow: filled && hovered ? `0 0 6px ${cat.color}` : "none",
+                  }}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] text-slate-600 font-mono">
+              avg{" "}
+              {Math.round(cat.skills.reduce((s, sk) => s + sk.level, 0) / cat.skills.length)}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// Mobile accordion card
+function MobileCard({ cat, index }: { cat: Category; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [open, setOpen] = useState(false);
+  const Icon = cat.icon;
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * 0.08, duration: 0.45 }}
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: open ? `${cat.color}09` : "var(--card-bg)",
+        border: `1px solid ${open ? cat.color + "28" : "var(--card-border)"}`,
+        transition: "background 0.3s, border-color 0.3s",
+      }}
+    >
+      <button
+        className="w-full flex items-center gap-3 px-4 py-4 text-left"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+          style={{
+            background: open ? `${cat.color}18` : `${cat.color}10`,
+            border: `1px solid ${cat.color}22`,
+          }}
+        >
+          <Icon size={17} style={{ color: cat.color }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-white">{cat.label}</p>
+          <p className="text-xs text-slate-600 truncate">{cat.subtitle}</p>
+        </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-xs font-mono font-bold" style={{ color: cat.color }}>
+            {cat.skills.length}
+          </span>
+          <motion.div
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.22 }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path
+                d="M3 5L7 9L11 5"
+                stroke="#64748b"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
+        </div>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.26, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-5 flex flex-col gap-2">
+              {cat.skills.map((skill, si) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: si * 0.04 }}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                  style={{
+                    background: `${cat.color}07`,
+                    border: `1px solid ${cat.color}14`,
+                  }}
+                >
+                  <span className="text-xs font-semibold text-white flex-1">{skill.name}</span>
+                  <div
+                    className="w-16 h-1 rounded-full overflow-hidden"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  >
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 0.7, delay: si * 0.05, ease: "easeOut" }}
+                      className="h-full rounded-full"
+                      style={{
+                        background: `linear-gradient(90deg, ${cat.color}80, ${cat.color})`,
+                      }}
+                    />
+                  </div>
+                  <span
+                    className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
+                    style={{
+                      background: `${cat.color}14`,
+                      color: cat.color,
+                      border: `1px solid ${cat.color}22`,
+                    }}
+                  >
+                    {skill.level}%
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
 }
 
 export default function Skills() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
-  const mobileInView = useInView(mobileRef, { once: true, margin: "-80px" });
-  const [activeCategory, setActiveCategory] = useState("frontend");
-  const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      const section = sectionRef.current;
-      const track = trackRef.current;
-      if (!section || !track) return;
-
-      const ctx = gsap.context(() => {
-        const mainTween = gsap.to(track, {
-          x: () => -(track.scrollWidth - window.innerWidth),
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            pin: true,
-            anticipatePin: 1,
-            scrub: 1.1,
-            end: () => `+=${track.scrollWidth - window.innerWidth}`,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // Animate skill bars per panel via containerAnimation
-        track.querySelectorAll<HTMLElement>(".skill-panel").forEach((panel) => {
-          panel.querySelectorAll<HTMLElement>(".skill-bar-fill").forEach((bar) => {
-            const targetWidth = bar.dataset.width ?? "0%";
-            gsap.fromTo(
-              bar,
-              { width: 0 },
-              {
-                width: targetWidth,
-                duration: 0.65,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: panel,
-                  containerAnimation: mainTween,
-                  start: "left 72%",
-                  toggleActions: "play none none reset",
-                },
-              }
-            );
-          });
-
-          // Stagger skill cards in
-          gsap.from(panel.querySelectorAll(".skill-card"), {
-            opacity: 0,
-            y: 22,
-            scale: 0.94,
-            stagger: { amount: 0.4, from: "start" },
-            duration: 0.5,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: panel,
-              containerAnimation: mainTween,
-              start: "left 78%",
-              toggleActions: "play none none reset",
-            },
-          });
-
-          // Left side info slides in
-          gsap.from(panel.querySelectorAll(".panel-meta"), {
-            opacity: 0,
-            x: -30,
-            duration: 0.55,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: panel,
-              containerAnimation: mainTween,
-              start: "left 85%",
-              toggleActions: "play none none reset",
-            },
-          });
-        });
-      });
-
-      return () => ctx.revert();
-    });
-
-    return () => mm.revert();
-  }, []);
-
-  const active = skillCategories.find((c) => c.id === activeCategory)!;
+  const headerRef = useRef<HTMLDivElement>(null);
+  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="skills" ref={sectionRef} className="relative overflow-hidden">
-
-      {/* ── Desktop horizontal scroll ── */}
+    <section id="skills" className="relative py-24 overflow-hidden">
+      {/* Ambient glows */}
       <div
-        ref={trackRef}
-        className="hidden md:flex"
-        style={{ width: `${skillCategories.length * 100}vw` }}
-      >
-        {skillCategories.map((cat, idx) => {
-          const Icon = cat.icon;
-          return (
-            <div
-              key={cat.id}
-              className="skill-panel shrink-0 flex items-center px-16 xl:px-20 relative"
-              style={{ width: "100vw", minHeight: "100vh" }}
-            >
-              {/* Giant watermark number */}
-              <div
-                className="absolute select-none pointer-events-none font-black"
-                style={{
-                  right: "3vw",
-                  bottom: "-2rem",
-                  fontSize: "clamp(14rem, 32vw, 26rem)",
-                  lineHeight: 0.8,
-                  color: `${cat.color}05`,
-                  fontFamily: "monospace",
-                  zIndex: 0,
-                }}
-              >
-                {String(idx + 1).padStart(2, "0")}
-              </div>
+        className="absolute top-1/4 left-1/4 pointer-events-none"
+        style={{
+          width: 600,
+          height: 600,
+          background:
+            "radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%)",
+          filter: "blur(40px)",
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 pointer-events-none"
+        style={{
+          width: 600,
+          height: 600,
+          background:
+            "radial-gradient(ellipse, rgba(147,51,234,0.04) 0%, transparent 70%)",
+          filter: "blur(40px)",
+        }}
+      />
 
-              <div className="w-full grid grid-cols-5 gap-10 xl:gap-16 items-center relative z-10">
-
-                {/* ── Left: category meta (2 cols) ── */}
-                <div className="col-span-2 panel-meta flex flex-col gap-0">
-
-                  {/* Section title — only on first panel */}
-                  {idx === 0 && (
-                    <div className="mb-10">
-                      <p className="text-[11px] text-purple-400 tracking-[0.3em] uppercase mb-2 font-medium">
-                        Expertise
-                      </p>
-                      <h2 className="text-5xl xl:text-6xl font-bold text-white leading-tight">
-                        Technical{" "}
-                        <span
-                          style={{
-                            background: "linear-gradient(135deg, #9333ea, #06b6d4)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                          }}
-                        >
-                          Skills
-                        </span>
-                      </h2>
-                      <p className="mt-3 text-slate-500 text-sm">
-                        scroll to explore each domain →
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Icon */}
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-                    style={{
-                      background: `${cat.color}14`,
-                      border: `1px solid ${cat.color}30`,
-                      boxShadow: `0 0 24px ${cat.color}12`,
-                    }}
-                  >
-                    <Icon size={24} style={{ color: cat.color }} />
-                  </div>
-
-                  <h3 className="text-3xl xl:text-4xl font-bold text-white mb-2 leading-tight">
-                    {cat.label}
-                  </h3>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6 max-w-[280px]">
-                    {cat.subtitle}
-                  </p>
-
-                  {/* Index badge + skill count */}
-                  <div className="flex items-center gap-3 mb-8">
-                    <span
-                      className="text-xs font-mono font-semibold px-3 py-1.5 rounded-lg tracking-wider"
-                      style={{
-                        background: `${cat.color}12`,
-                        border: `1px solid ${cat.color}28`,
-                        color: cat.color,
-                      }}
-                    >
-                      {String(idx + 1).padStart(2, "0")} / {String(skillCategories.length).padStart(2, "0")}
-                    </span>
-                    <span className="text-xs text-slate-600">
-                      {cat.skills.length} technologies
-                    </span>
-                  </div>
-
-                  {/* Progress bar showing position in horizontal scroll */}
-                  <div className="flex gap-1.5">
-                    {skillCategories.map((c, di) => (
-                      <div
-                        key={c.id}
-                        className="h-0.5 rounded-full flex-1 transition-all duration-700"
-                        style={{
-                          background: di === idx ? c.color : "rgba(255,255,255,0.07)",
-                          boxShadow: di === idx ? `0 0 6px ${c.color}` : "none",
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* ── Right: skill cards grid (3 cols) ── */}
-                <div className="col-span-3">
-                  <div className={`grid gap-3 ${cat.skills.length > 4 ? "grid-cols-3" : "grid-cols-2"}`}>
-                    {cat.skills.map((skill) => (
-                      <div
-                        key={skill.name}
-                        className="skill-card group relative p-4 rounded-2xl overflow-hidden cursor-default"
-                        style={{
-                          background: `${cat.color}07`,
-                          border: `1px solid ${cat.color}16`,
-                        }}
-                      >
-                        {/* Hover glow */}
-                        <div
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                          style={{
-                            background: `radial-gradient(ellipse at 50% 0%, ${cat.color}20, transparent 70%)`,
-                          }}
-                        />
-                        {/* Top accent line */}
-                        <div
-                          className="absolute top-0 left-3 right-3 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: `linear-gradient(90deg, transparent, ${cat.color}80, transparent)` }}
-                        />
-
-                        <div className="relative z-10">
-                          {/* Skill name */}
-                          <div className="flex items-start justify-between mb-3">
-                            <span className="text-sm font-semibold text-white leading-tight">
-                              {skill.name}
-                            </span>
-                            <span
-                              className="text-[10px] font-medium px-1.5 py-0.5 rounded-md ml-1 shrink-0"
-                              style={{
-                                background: `${cat.color}18`,
-                                color: cat.color,
-                              }}
-                            >
-                              {proficiencyLabel(skill.level)}
-                            </span>
-                          </div>
-
-                          {/* Progress bar */}
-                          <div
-                            className="h-1 w-full rounded-full overflow-hidden mb-2"
-                            style={{ background: "rgba(255,255,255,0.06)" }}
-                          >
-                            <div
-                              className="skill-bar-fill h-full rounded-full"
-                              data-width={`${skill.level}%`}
-                              style={{
-                                width: 0,
-                                background: `linear-gradient(90deg, ${cat.color}70, ${cat.color})`,
-                                boxShadow: `0 0 8px ${cat.color}70`,
-                              }}
-                            />
-                          </div>
-
-                          {/* Percentage */}
-                          <span
-                            className="text-xs font-mono font-bold"
-                            style={{ color: cat.color }}
-                          >
-                            {skill.level}%
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Mobile layout ── */}
-      <div ref={mobileRef} className="md:hidden py-20 px-4 max-w-lg mx-auto">
-        {/* Header */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
         <motion.div
+          ref={headerRef}
           initial={{ opacity: 0, y: 20 }}
-          animate={mobileInView ? { opacity: 1, y: 0 } : {}}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-10 text-center"
+          className="text-center mb-14"
         >
-          <p className="text-[11px] text-purple-400 tracking-[0.3em] uppercase mb-3 font-medium">
+          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
             Expertise
           </p>
-          <h2 className="text-4xl font-bold text-white">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white">
             Technical{" "}
             <span
               style={{
                 background: "linear-gradient(135deg, #9333ea, #06b6d4)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               Skills
             </span>
           </h2>
+          <p className="mt-4 text-slate-500 text-sm">
+            5 domains · 28 technologies
+          </p>
         </motion.div>
 
-        {/* Accordion categories */}
-        <div className="flex flex-col gap-2">
-          {skillCategories.map((cat, idx) => {
-            const Icon = cat.icon;
-            const isOpen = expandedMobile === cat.id;
-            return (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={mobileInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: idx * 0.07 }}
-                className="rounded-2xl overflow-hidden"
-                style={{
-                  background: isOpen ? `${cat.color}08` : "var(--card-bg)",
-                  border: `1px solid ${isOpen ? cat.color + "30" : "var(--card-border)"}`,
-                  transition: "background 0.3s, border-color 0.3s",
-                }}
-              >
-                {/* Header row */}
-                <button
-                  className="w-full flex items-center gap-3 p-4 text-left"
-                  onClick={() => setExpandedMobile(isOpen ? null : cat.id)}
-                >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                    style={{
-                      background: isOpen ? `${cat.color}20` : `${cat.color}12`,
-                      border: `1px solid ${cat.color}25`,
-                    }}
-                  >
-                    <Icon size={16} style={{ color: cat.color }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white">{cat.label}</p>
-                    <p className="text-xs text-slate-500 truncate">{cat.subtitle}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-xs font-mono" style={{ color: cat.color }}>
-                      {cat.skills.length} skills
-                    </span>
-                    <motion.div
-                      animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ duration: 0.22 }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M3 5L7 9L11 5" stroke="#64748b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </motion.div>
-                  </div>
-                </button>
-
-                {/* Expanded skill grid */}
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.28, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-4 pb-4 grid grid-cols-2 gap-2.5">
-                        {cat.skills.map((skill, si) => (
-                          <motion.div
-                            key={skill.name}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: si * 0.04 }}
-                            className="p-3.5 rounded-xl"
-                            style={{
-                              background: `${cat.color}08`,
-                              border: `1px solid ${cat.color}18`,
-                            }}
-                          >
-                            <div className="flex items-start justify-between mb-2.5">
-                              <span className="text-xs font-semibold text-white leading-tight">
-                                {skill.name}
-                              </span>
-                              <span
-                                className="text-[9px] font-bold ml-1 shrink-0"
-                                style={{ color: cat.color }}
-                              >
-                                {skill.level}%
-                              </span>
-                            </div>
-                            <div
-                              className="h-0.5 w-full rounded-full overflow-hidden"
-                              style={{ background: "rgba(255,255,255,0.06)" }}
-                            >
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${skill.level}%` }}
-                                transition={{ duration: 0.8, delay: si * 0.05, ease: "easeOut" }}
-                                className="h-full rounded-full"
-                                style={{
-                                  background: `linear-gradient(90deg, ${cat.color}70, ${cat.color})`,
-                                  boxShadow: `0 0 6px ${cat.color}60`,
-                                }}
-                              />
-                            </div>
-                            <p className="text-[10px] text-slate-600 mt-1.5">
-                              {proficiencyLabel(skill.level)}
-                            </p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+        {/* ── Desktop bento grid ── */}
+        <div className="hidden md:grid grid-cols-12 gap-4 auto-rows-[minmax(200px,auto)]">
+          {/* Frontend — large card */}
+          <BentoCard
+            cat={skillCategories[0]}
+            animIndex={0}
+            className="col-span-7 row-span-1"
+          />
+          {/* Backend */}
+          <BentoCard
+            cat={skillCategories[1]}
+            animIndex={1}
+            className="col-span-5 row-span-1"
+          />
+          {/* Databases */}
+          <BentoCard
+            cat={skillCategories[2]}
+            animIndex={2}
+            className="col-span-4 row-span-1"
+          />
+          {/* DevOps */}
+          <BentoCard
+            cat={skillCategories[3]}
+            animIndex={3}
+            className="col-span-4 row-span-1"
+          />
+          {/* AI */}
+          <BentoCard
+            cat={skillCategories[4]}
+            animIndex={4}
+            className="col-span-4 row-span-1"
+          />
         </div>
 
-        {/* All tech badge cloud */}
+        {/* ── Mobile accordion ── */}
+        <div className="md:hidden flex flex-col gap-2.5">
+          {skillCategories.map((cat, i) => (
+            <MobileCard key={cat.id} cat={cat} index={i} />
+          ))}
+        </div>
+
+        {/* All-tech cloud footer */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={mobileInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-8 p-5 rounded-2xl"
-          style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-10 py-6 px-6 rounded-2xl text-center"
+          style={{
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
+          }}
         >
-          <p className="text-center text-[10px] text-slate-600 tracking-[0.25em] uppercase mb-4">
+          <p className="text-[10px] text-slate-700 tracking-[0.3em] uppercase mb-4">
             All Technologies
           </p>
-          <div className="flex flex-wrap justify-center gap-1.5">
+          <div className="flex flex-wrap justify-center gap-2">
             {skillCategories.flatMap((cat) =>
               cat.skills.map((skill) => (
                 <span
                   key={`${cat.id}-${skill.name}`}
-                  className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                  className="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 cursor-default"
                   style={{
-                    background: `${cat.color}10`,
+                    background: `${cat.color}0d`,
                     border: `1px solid ${cat.color}22`,
                     color: cat.color,
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = `${cat.color}1a`;
+                    (e.currentTarget as HTMLElement).style.boxShadow = `0 0 12px ${cat.color}20`;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = `${cat.color}0d`;
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
                   }}
                 >
                   {skill.name}
