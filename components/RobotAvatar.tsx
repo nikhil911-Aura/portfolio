@@ -217,6 +217,8 @@ export default function RobotAvatar() {
     setTimeout(() => setWaving(false), 1500);
   };
 
+  if (isMobile) return null;
+
   return (
     <>
       {/* Full-viewport drag constraint layer */}
