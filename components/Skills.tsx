@@ -102,17 +102,36 @@ function BentoCard({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const Icon = cat.icon;
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    const el = e.currentTarget as HTMLElement;
-    const rect = el.getBoundingClientRect();
+    if (!innerRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
     const cx = (e.clientX - rect.left) / rect.width - 0.5;
     const cy = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: cy * -7, y: cx * 7 });
+    innerRef.current.style.transform = `perspective(900px) rotateX(${cy * -7}deg) rotateY(${cx * 7}deg)`;
+    innerRef.current.style.transition = "transform 0.07s linear";
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    if (!innerRef.current) return;
+    innerRef.current.style.background = `${cat.color}0e`;
+    innerRef.current.style.borderColor = `${cat.color}2a`;
+    innerRef.current.style.boxShadow = `0 24px 60px ${cat.color}10, 0 0 0 1px ${cat.color}18`;
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (!innerRef.current) return;
+    innerRef.current.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)";
+    innerRef.current.style.transition = "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), background 0.3s, border-color 0.3s, box-shadow 0.3s";
+    innerRef.current.style.background = `${cat.color}07`;
+    innerRef.current.style.borderColor = `${cat.color}14`;
+    innerRef.current.style.boxShadow = "none";
   };
 
   return (
@@ -124,25 +143,17 @@ function BentoCard({
       transition={{ delay: animIndex * 0.1, duration: 0.55, ease: "easeOut" }}
     >
       <div
+        ref={innerRef}
         className="relative h-full rounded-2xl overflow-hidden p-6 cursor-default"
         style={{
-          background: hovered ? `${cat.color}0e` : `${cat.color}07`,
-          border: `1px solid ${hovered ? cat.color + "2a" : cat.color + "14"}`,
-          boxShadow: hovered
-            ? `0 24px 60px ${cat.color}10, 0 0 0 1px ${cat.color}18`
-            : "none",
-          transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-          transition: hovered
-            ? "transform 0.07s linear, background 0.3s, border-color 0.3s, box-shadow 0.3s"
-            : "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), background 0.3s, border-color 0.3s, box-shadow 0.3s",
+          background: `${cat.color}07`,
+          border: `1px solid ${cat.color}14`,
+          transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), background 0.3s, border-color 0.3s, box-shadow 0.3s",
           willChange: "transform",
         }}
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => {
-          setTilt({ x: 0, y: 0 });
-          setHovered(false);
-        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Top accent line */}
         <div

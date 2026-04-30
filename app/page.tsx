@@ -66,14 +66,6 @@ export default function Home() {
       // Sync GSAP ScrollTrigger
       lenis.on("scroll", ScrollTrigger.update);
 
-      // Velocity blur — more aggressive motion blur when scrolling fast
-      lenis.on("scroll", ({ velocity }: { velocity: number }) => {
-        const blur = Math.min(Math.abs(velocity) * 0.4, 3);
-        const mainEl = document.getElementById("main-content");
-        if (mainEl) {
-          mainEl.style.filter = blur > 0.15 ? `blur(${blur.toFixed(2)}px)` : "";
-        }
-      });
 
       gsap.ticker.add((time) => lenis!.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
