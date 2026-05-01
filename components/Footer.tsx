@@ -32,19 +32,19 @@ export default function Footer() {
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
               style={{
-                filter: "grayscale(100%) brightness(0.65)",
+                filter: "grayscale(35%) brightness(0.8)",
                 transition: "filter 0.6s ease, transform 0.6s ease",
-                transform: "scale(1.06)",
+                transform: "scale(1.04)",
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLImageElement;
-                el.style.filter = "grayscale(0%) brightness(0.95)";
+                el.style.filter = "grayscale(0%) brightness(1) saturate(1.15)";
                 el.style.transform = "scale(1)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLImageElement;
-                el.style.filter = "grayscale(100%) brightness(0.65)";
-                el.style.transform = "scale(1.06)";
+                el.style.filter = "grayscale(35%) brightness(0.8)";
+                el.style.transform = "scale(1.04)";
               }}
             />
           </div>

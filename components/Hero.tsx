@@ -33,6 +33,33 @@ const heroImages = [
   "/images/image3.jpg",
 ];
 
+function HeroCounter({ to, suffix, active }: { to: number; suffix: string; active: boolean }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (!active || !spanRef.current) return;
+    const duration = 1600;
+    const startTime = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      if (spanRef.current) spanRef.current.textContent = Math.round(eased * to) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [active, to, suffix]);
+
+  return (
+    <span
+      ref={spanRef}
+      className="text-2xl font-bold"
+      style={{ background: "linear-gradient(135deg, #9333ea, #06b6d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+    >
+      0{suffix}
+    </span>
+  );
+}
+
 export default function Hero() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -154,11 +181,11 @@ export default function Hero() {
               style={{ width: col.width, flexShrink: 0, cursor: "pointer" }}
               onMouseEnter={(e) => {
                 const img = e.currentTarget.querySelector("img");
-                if (img) img.style.filter = "grayscale(0%) brightness(0.85)";
+                if (img) img.style.filter = "grayscale(0%) brightness(1) saturate(1.15)";
               }}
               onMouseLeave={(e) => {
                 const img = e.currentTarget.querySelector("img");
-                if (img) img.style.filter = "grayscale(100%) brightness(0.55)";
+                if (img) img.style.filter = "grayscale(30%) brightness(0.82)";
               }}
             >
               <motion.div
@@ -176,8 +203,8 @@ export default function Hero() {
                   alt=""
                   className="w-full h-full object-cover"
                   style={{
-                    filter: "grayscale(100%) brightness(0.55)",
-                    transition: "filter 0.6s ease",
+                    filter: "grayscale(30%) brightness(0.82)",
+                    transition: "filter 0.7s ease",
                   }}
                 />
               </motion.div>
@@ -352,22 +379,12 @@ export default function Hero() {
               className="flex gap-6 pt-4 border-t border-white/5"
             >
               {[
-                { label: "Projects Shipped", value: "10+" },
-                { label: "Technologies", value: "20+" },
-                { label: "GitHub Repos", value: "30+" },
+                { label: "Projects Shipped", to: 10, suffix: "+" },
+                { label: "Technologies",     to: 20, suffix: "+" },
+                { label: "GitHub Repos",     to: 30, suffix: "+" },
               ].map((stat) => (
                 <div key={stat.label} className="flex flex-col">
-                  <span
-                    className="text-2xl font-bold"
-                    style={{
-                      background: "linear-gradient(135deg, #9333ea, #06b6d4)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {stat.value}
-                  </span>
+                  <HeroCounter to={stat.to} suffix={stat.suffix} active={inView} />
                   <span className="text-xs text-slate-500">{stat.label}</span>
                 </div>
               ))}

@@ -2,7 +2,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, MotionValue } from "framer-motion";
 import { ExternalLink, Star } from "lucide-react";
 import { GithubIcon } from "./icons";
 
@@ -141,8 +141,8 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
             className="w-full h-full object-cover"
             style={{
               filter: isHovered
-                ? "grayscale(0%) brightness(0.5)"
-                : "grayscale(100%) brightness(0.22)",
+                ? "grayscale(0%) brightness(0.62) saturate(1.1)"
+                : "grayscale(50%) brightness(0.42)",
               transition: "filter 0.6s ease",
             }}
           />
@@ -286,8 +286,8 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
                     className="w-full h-full object-cover"
                     style={{
                       filter: isHovered
-                        ? "grayscale(0%) brightness(0.95)"
-                        : "grayscale(100%) brightness(0.6)",
+                        ? "grayscale(0%) brightness(1) saturate(1.15)"
+                        : "grayscale(40%) brightness(0.75)",
                       transition: "filter 0.6s ease",
                     }}
                   />
@@ -324,6 +324,79 @@ function StackedCard({ project, index, total, scrollYProgress }: StackedCardProp
   );
 }
 
+function MobileProjectCard({ project, index }: { project: Project; index: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="rounded-2xl overflow-hidden"
+      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Background image */}
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={project.bgImage}
+          alt={project.title}
+          className="w-full h-full object-cover"
+          style={{
+            filter: hovered ? "grayscale(0%) brightness(0.6)" : "grayscale(50%) brightness(0.38)",
+            transition: "filter 0.6s ease",
+          }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%)" }} />
+        <div className="absolute bottom-3 left-4 right-4">
+          <div className="flex items-center gap-2 mb-1">
+            {project.featured && (
+              <span className="flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ background: `${project.color}20`, color: project.color, border: `1px solid ${project.color}30` }}>
+                <Star size={8} /> Featured
+              </span>
+            )}
+            <span className="text-[10px] font-mono text-slate-500">{String(index + 1).padStart(2, "0")}</span>
+          </div>
+          <h3 className="text-lg font-black text-white">{project.title}</h3>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-2">{project.description}</p>
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {project.tech.slice(0, 4).map((t) => (
+            <span key={t} className="text-[10px] px-2 py-0.5 rounded-md" style={{ background: `${project.color}12`, border: `1px solid ${project.color}25`, color: project.color }}>
+              {t}
+            </span>
+          ))}
+          {project.tech.length > 4 && (
+            <span className="text-[10px] px-2 py-0.5 rounded-md text-slate-600" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              +{project.tech.length - 4}
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <a href={project.live} target="_blank" rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold text-white"
+            style={{ background: `linear-gradient(135deg, ${project.color}, ${project.color}bb)` }}>
+            <ExternalLink size={11} /> Live Demo
+          </a>
+          <a href={project.github} target="_blank" rel="noopener noreferrer"
+            className="px-4 py-2 rounded-xl text-xs text-slate-400"
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -335,35 +408,27 @@ export default function Projects() {
     <section id="projects">
       {/* Section header */}
       <div className="py-20 text-center">
-        <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-          Portfolio
-        </p>
+        <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">Portfolio</p>
         <h2 className="text-4xl sm:text-5xl font-bold text-white">
           Featured{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #c084fc, #22d3ee)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          <span style={{ background: "linear-gradient(135deg, #c084fc, #22d3ee)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
             Projects
           </span>
         </h2>
         <p className="mt-4 text-slate-500">Real products shipped to production.</p>
       </div>
 
-      {/* Stacked cards container */}
-      <div ref={containerRef} style={{ height: `${projects.length * 100}vh` }}>
+      {/* Mobile: vertical card list */}
+      <div className="lg:hidden px-4 pb-16 flex flex-col gap-5">
         {projects.map((project, i) => (
-          <StackedCard
-            key={project.id}
-            project={project}
-            index={i}
-            total={projects.length}
-            scrollYProgress={scrollYProgress}
-          />
+          <MobileProjectCard key={project.id} project={project} index={i} />
+        ))}
+      </div>
+
+      {/* Desktop: stacked scroll cards */}
+      <div ref={containerRef} className="hidden lg:block" style={{ height: `${projects.length * 100}vh` }}>
+        {projects.map((project, i) => (
+          <StackedCard key={project.id} project={project} index={i} total={projects.length} scrollYProgress={scrollYProgress} />
         ))}
       </div>
     </section>

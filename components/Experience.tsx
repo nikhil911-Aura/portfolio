@@ -327,16 +327,16 @@ export default function Experience() {
                           alt={exp.company}
                           className="absolute inset-0 w-full h-full object-cover"
                           style={{
-                            filter: "grayscale(100%) brightness(0.6)",
+                            filter: "grayscale(40%) brightness(0.78)",
                             transition: "filter 0.6s ease",
                           }}
                           onMouseEnter={(e) => {
                             (e.currentTarget as HTMLImageElement).style.filter =
-                              "grayscale(0%) brightness(0.9)";
+                              "grayscale(0%) brightness(1) saturate(1.1)";
                           }}
                           onMouseLeave={(e) => {
                             (e.currentTarget as HTMLImageElement).style.filter =
-                              "grayscale(100%) brightness(0.6)";
+                              "grayscale(40%) brightness(0.78)";
                           }}
                         />
                         {/* Bottom fade */}

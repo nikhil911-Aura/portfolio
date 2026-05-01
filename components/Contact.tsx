@@ -89,7 +89,7 @@ export default function Contact() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            filter: bgHovered ? "grayscale(0%) brightness(0.35)" : "grayscale(100%) brightness(0.18)",
+            filter: bgHovered ? "grayscale(0%) brightness(0.42) saturate(1.1)" : "grayscale(40%) brightness(0.3)",
             transition: "filter 0.8s ease",
           }}
         />
