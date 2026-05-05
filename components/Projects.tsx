@@ -59,6 +59,19 @@ const projects = [
     bgImage: "/images/image7.jpg",
     mockupImage: "/images/image11.jpg",
   },
+  {
+    id: 5,
+    title: "Karya",
+    description:
+      "A collaborative project management platform with task boards, team assignments, real-time status updates, and an intuitive dashboard — built and deployed on IBR Cloud.",
+    live: "https://karya.ibrcloud.com/",
+    github: "https://github.com/Nick-ui911",
+    tech: ["React", "Node.js", "MongoDB", "Express", "TypeScript", "Tailwind CSS"],
+    color: "#f59e0b",
+    featured: true,
+    bgImage: "https://plus.unsplash.com/premium_photo-1661405786707-607e804c351b?w=1400&q=85",
+    mockupImage: "https://plus.unsplash.com/premium_photo-1661405786707-607e804c351b?w=700&q=80",
+  },
 ];
 
 interface Project {

@@ -278,11 +278,16 @@ function AccountSection({
   );
 }
 
-// Map of repo name → release download URL
-const RELEASE_LINKS: Record<string, { label: string; url: string }> = {
+const RELEASE_LINKS: Record<string, { label: string; url: string; type?: "download" | "live" }> = {
   "melodi-music-player": {
     label: "Download APK v1.0.0",
     url: "https://github.com/nikhil911-Aura/melodi-music-player/releases/download/v1.0.0/melodi.apk",
+    type: "download",
+  },
+  "project-management-tool": {
+    label: "View Live →",
+    url: "https://karya.ibrcloud.com/",
+    type: "live",
   },
 };
 
@@ -347,7 +352,7 @@ function RepoCard({
             color: accentColor,
           }}
         >
-          <Download size={10} />
+          {release.type === "live" ? <ExternalLink size={10} /> : <Download size={10} />}
           {release.label}
         </a>
       )}
