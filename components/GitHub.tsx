@@ -284,7 +284,7 @@ const RELEASE_LINKS: Record<string, { label: string; url: string; type?: "downlo
     url: "https://github.com/nikhil911-Aura/melodi-music-player/releases/download/v1.0.0/melodi.apk",
     type: "download",
   },
-  "project-management-tool": {
+  "Pojects-Management-Tool": {
     label: "View Live →",
     url: "https://karya.ibrcloud.com/",
     type: "live",

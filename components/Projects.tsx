@@ -69,8 +69,8 @@ const projects = [
     tech: ["React", "Node.js", "MongoDB", "Express", "TypeScript", "Tailwind CSS"],
     color: "#f59e0b",
     featured: true,
-    bgImage: "https://plus.unsplash.com/premium_photo-1661405786707-607e804c351b?w=1400&q=85",
-    mockupImage: "https://plus.unsplash.com/premium_photo-1661405786707-607e804c351b?w=700&q=80",
+    bgImage: "/images/image1.jpg",
+    mockupImage: "/images/image2.jpg",
   },
 ];
 
@@ -410,13 +410,23 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
   );
 }
 
-export default function Projects() {
+function DesktopProjects() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
+  return (
+    <div ref={containerRef} style={{ height: `${projects.length * 70}vh` }}>
+      {projects.map((project, i) => (
+        <StackedCard key={project.id} project={project} index={i} total={projects.length} scrollYProgress={scrollYProgress} />
+      ))}
+    </div>
+  );
+}
+
+export default function Projects() {
   return (
     <section id="projects">
       {/* Section header */}
@@ -438,11 +448,9 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* Desktop: stacked scroll cards */}
-      <div ref={containerRef} className="hidden lg:block" style={{ height: `${projects.length * 100}vh` }}>
-        {projects.map((project, i) => (
-          <StackedCard key={project.id} project={project} index={i} total={projects.length} scrollYProgress={scrollYProgress} />
-        ))}
+      {/* Desktop: stacked scroll cards — own component so useScroll targets a always-rendered div */}
+      <div className="hidden lg:block">
+        <DesktopProjects />
       </div>
     </section>
   );
