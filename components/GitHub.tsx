@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
-import { Star, GitFork, ExternalLink, Code2, Clock, Download } from "lucide-react";
+import { Star, GitFork, ExternalLink, Code2, Clock, Download, Trophy } from "lucide-react";
 import { GithubIcon } from "./icons";
 
 interface Repo {
@@ -16,6 +16,15 @@ interface Repo {
   language: string | null;
   updated_at: string;
   topics: string[];
+}
+
+interface Achievement {
+  badge: {
+    displayName: string;
+    description: string;
+    imageUrl: string;
+  };
+  tier: { tier: number } | null;
 }
 
 interface AccountStats {
@@ -54,6 +63,8 @@ export default function GitHub() {
   const [secondaryRepos, setSecondaryRepos] = useState<Repo[]>([]);
   const [primaryStats, setPrimaryStats] = useState<AccountStats | null>(null);
   const [secondaryStats, setSecondaryStats] = useState<AccountStats | null>(null);
+  const [primaryAchievements, setPrimaryAchievements] = useState<Achievement[]>([]);
+  const [secondaryAchievements, setSecondaryAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,6 +75,8 @@ export default function GitHub() {
         setSecondaryRepos(data.secondaryRepos ?? []);
         setPrimaryStats(data.stats?.primary ?? null);
         setSecondaryStats(data.stats?.secondary ?? null);
+        setPrimaryAchievements(data.achievements?.primary ?? []);
+        setSecondaryAchievements(data.achievements?.secondary ?? []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -112,6 +125,7 @@ export default function GitHub() {
         <AccountSection
           stats={primaryStats}
           repos={primaryRepos}
+          achievements={primaryAchievements}
           loading={loading}
           inView={inView}
           accentColor="#9333ea"
@@ -134,6 +148,7 @@ export default function GitHub() {
         <AccountSection
           stats={secondaryStats}
           repos={secondaryRepos}
+          achievements={secondaryAchievements}
           loading={loading}
           inView={inView}
           accentColor="#06b6d4"
@@ -147,9 +162,112 @@ export default function GitHub() {
   );
 }
 
+function AchievementBadges({
+  achievements,
+  inView,
+  accentColor,
+  accentBg,
+  accentBorder,
+  delay,
+}: {
+  achievements: Achievement[];
+  inView: boolean;
+  accentColor: string;
+  accentBg: string;
+  accentBorder: string;
+  delay: number;
+}) {
+  if (achievements.length === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: delay + 0.4 }}
+      className="mt-6 p-5 rounded-2xl"
+      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Trophy size={14} style={{ color: accentColor }} />
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          Achievements
+        </span>
+        <span
+          className="text-xs px-1.5 py-0.5 rounded-md font-medium"
+          style={{ background: accentBg, color: accentColor, border: `1px solid ${accentBorder}` }}
+        >
+          {achievements.length}
+        </span>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        {achievements.map((a, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.3, delay: delay + 0.5 + i * 0.06 }}
+            whileHover={{ scale: 1.08, y: -2 }}
+            className="group relative flex flex-col items-center gap-1.5 cursor-default"
+            title={a.badge.description}
+          >
+            {/* Badge image */}
+            <div
+              className="relative w-14 h-14 rounded-2xl overflow-hidden flex items-center justify-center transition-all duration-300"
+              style={{
+                background: accentBg,
+                border: `1px solid ${accentBorder}`,
+                boxShadow: `0 0 0 0 ${accentColor}`,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={a.badge.imageUrl}
+                alt={a.badge.displayName}
+                className="w-10 h-10 object-contain drop-shadow-lg"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+              {/* Tier indicator */}
+              {a.tier && a.tier.tier > 1 && (
+                <span
+                  className="absolute -top-1 -right-1 text-[9px] font-black px-1 rounded-full leading-4"
+                  style={{ background: accentColor, color: "#fff" }}
+                >
+                  ×{a.tier.tier}
+                </span>
+              )}
+            </div>
+
+            {/* Badge name */}
+            <span className="text-[10px] text-slate-500 text-center leading-tight max-w-14 group-hover:text-slate-300 transition-colors">
+              {a.badge.displayName}
+            </span>
+
+            {/* Tooltip on hover */}
+            <div
+              className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+            >
+              <div
+                className="text-xs text-white px-2.5 py-1.5 rounded-lg max-w-48 text-center leading-snug"
+                style={{ background: "rgba(15,15,25,0.95)", border: "1px solid var(--card-border)" }}
+              >
+                <div className="font-semibold mb-0.5">{a.badge.displayName}</div>
+                <div className="text-slate-400 text-[10px] whitespace-normal">{a.badge.description}</div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 function AccountSection({
   stats,
   repos,
+  achievements,
   loading,
   inView,
   accentColor,
@@ -160,6 +278,7 @@ function AccountSection({
 }: {
   stats: AccountStats | null;
   repos: Repo[];
+  achievements: Achievement[];
   loading: boolean;
   inView: boolean;
   accentColor: string;
@@ -273,6 +392,18 @@ function AccountSection({
           <GithubIcon size={28} className="mx-auto mb-2 opacity-30" />
           <p className="text-sm">No public repositories found.</p>
         </div>
+      )}
+
+      {/* Achievement badges */}
+      {!loading && (
+        <AchievementBadges
+          achievements={achievements}
+          inView={inView}
+          accentColor={accentColor}
+          accentBg={accentBg}
+          accentBorder={accentBorder}
+          delay={delay}
+        />
       )}
     </div>
   );
