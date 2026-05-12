@@ -140,7 +140,7 @@ export default function LeetCode() {
                     <CircleProgress
                       value={stats.totalSolved}
                       max={stats.totalEasy + stats.totalMedium + stats.totalHard}
-                      color="#9333ea"
+                      color="#a855f7"
                       size={100}
                       strokeWidth={7}
                       inView={inView}
@@ -171,8 +171,8 @@ export default function LeetCode() {
                   <div
                     className="flex items-center gap-2 px-4 py-2 rounded-xl"
                     style={{
-                      background: "rgba(147,51,234,0.1)",
-                      border: "1px solid rgba(147,51,234,0.2)",
+                      background: "rgba(168,85,247,0.1)",
+                      border: "1px solid rgba(168,85,247,0.2)",
                     }}
                   >
                     <Trophy size={14} className="text-purple-400" />

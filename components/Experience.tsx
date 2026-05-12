@@ -20,7 +20,7 @@ const experiences = [
     period: "February 2026 — Present",
     location: "Indore (On-site)",
     current: true,
-    color: "#9333ea",
+    color: "#a855f7",
     image: "/images/image12.jpg",
     highlights: [
       "Building scalable full-stack applications using MERN stack with focus on performance and maintainability",
@@ -39,7 +39,7 @@ const experiences = [
     period: "January 2025 — June 2025",
     location: "Indore",
     current: false,
-    color: "#3b82f6",
+    color: "#6366f1",
     image: "/images/image13.jpg",
     highlights: [
       "Improved React application performance by 20% through memoization, lazy loading, and code splitting",
@@ -148,7 +148,7 @@ export default function Experience() {
         style={{
           width: "800px",
           height: "400px",
-          background: "radial-gradient(ellipse, rgba(147,51,234,0.05) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(168,85,247,0.05) 0%, transparent 70%)",
           filter: "blur(60px)",
         }}
       />
@@ -167,7 +167,7 @@ export default function Experience() {
             Work{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #f97316)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -200,9 +200,9 @@ export default function Experience() {
             />
             <defs>
               <linearGradient id="timelineGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#9333ea" />
-                <stop offset="60%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#06b6d4" />
+                <stop offset="0%"   stopColor="#a855f7" />
+                <stop offset="50%"  stopColor="#f97316" />
+                <stop offset="100%" stopColor="#22d3ee" />
               </linearGradient>
             </defs>
           </svg>

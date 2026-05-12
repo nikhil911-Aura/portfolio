@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
@@ -24,23 +24,23 @@ export default function CursorGlow() {
       };
 
       const onEnterInteractive = () => {
-        gsap.to(ring, { scale: 2, borderColor: "rgba(147,51,234,0.9)", duration: 0.25, ease: "power2.out" });
+        gsap.to(ring, { scale: 2, borderColor: "rgba(168,85,247,0.9)", duration: 0.25, ease: "power2.out" });
         gsap.to(dot, { scale: 0.4, duration: 0.2 });
       };
 
       const onLeaveInteractive = () => {
-        gsap.to(ring, { scale: 1, borderColor: "rgba(147,51,234,0.6)", duration: 0.25, ease: "power2.out" });
+        gsap.to(ring, { scale: 1, borderColor: "rgba(168,85,247,0.6)", duration: 0.25, ease: "power2.out" });
         gsap.to(dot, { scale: 1, duration: 0.2 });
       };
 
       const onEnterCard = () => {
-        gsap.to(ring, { scale: 3.5, duration: 0.35, ease: "power2.out", borderColor: "rgba(147,51,234,1)" });
+        gsap.to(ring, { scale: 3.5, duration: 0.35, ease: "power2.out", borderColor: "rgba(168,85,247,1)" });
         gsap.to(dot, { opacity: 0, scale: 0, duration: 0.2 });
         if (view) gsap.to(view, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(1.5)" });
       };
 
       const onLeaveCard = () => {
-        gsap.to(ring, { scale: 1, duration: 0.35, ease: "power2.out", borderColor: "rgba(147,51,234,0.6)" });
+        gsap.to(ring, { scale: 1, duration: 0.35, ease: "power2.out", borderColor: "rgba(168,85,247,0.6)" });
         gsap.to(dot, { opacity: 1, scale: 1, duration: 0.2 });
         if (view) gsap.to(view, { opacity: 0, scale: 0.5, duration: 0.2 });
       };
@@ -95,10 +95,10 @@ export default function CursorGlow() {
           width: 32,
           height: 32,
           borderRadius: "50%",
-          border: "1.5px solid rgba(147,51,234,0.6)",
+          border: "1.5px solid rgba(168,85,247,0.6)",
           translate: "-50% -50%",
           willChange: "transform",
-          background: "rgba(147,51,234,0.04)",
+          background: "rgba(168,85,247,0.04)",
         }}
       >
         <span

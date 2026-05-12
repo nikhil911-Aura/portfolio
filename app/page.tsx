@@ -34,15 +34,15 @@ import SectionDots from "@/components/SectionDots";
 
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false });
 
-// Section bg breathing — each section shifts to its own dark tone
+// Section bg breathing — each section shifts to its own deep cosmic tone
 const BG_TINTS: Record<string, string> = {
-  hero:       "#0a0a0f",
-  about:      "#0a0c0f",
-  skills:     "#0c0a0f",
-  experience: "#0a0a0a",
-  projects:   "#0a0a0a",
-  github:     "#0a0c0a",
-  contact:    "#0a0a0f",
+  hero:       "#070410",
+  about:      "#07050f",
+  skills:     "#08040f",
+  experience: "#060410",
+  projects:   "#060410",
+  github:     "#060510",
+  contact:    "#07040f",
 };
 
 export default function Home() {
@@ -121,7 +121,7 @@ export default function Home() {
       <div
         id="bg-tint-overlay"
         className="fixed inset-0 pointer-events-none"
-        style={{ zIndex: 0, transition: "background 0s", background: "#0a0a0f" }}
+        style={{ zIndex: 0, transition: "background 0s", background: "#070410" }}
       />
 
       <LoadingScreen />
@@ -135,7 +135,7 @@ export default function Home() {
       <RobotAvatar />
       <ChatWidget />
 
-      <main id="main-content" className="relative min-h-screen" style={{ zIndex: 1 }}>
+      <main id="main-content" className="relative min-h-screen perspective-scene" style={{ zIndex: 1 }}>
         <Hero />
         <TrustBar />
         <About />
@@ -160,8 +160,8 @@ export default function Home() {
           onClick={() => setCommandOpen(true)}
           className="fixed bottom-24 right-6 z-40 w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg"
           style={{
-            background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-            boxShadow: "0 0 30px rgba(147,51,234,0.4), 0 4px 20px rgba(0,0,0,0.3)",
+            background: "linear-gradient(135deg, #a855f7, #f97316)",
+            boxShadow: "0 0 30px rgba(168,85,247,0.4), 0 0 20px rgba(249,115,22,0.2)",
           }}
           aria-label="Open command palette"
         >

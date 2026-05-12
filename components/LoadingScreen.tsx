@@ -117,7 +117,7 @@ export default function LoadingScreen() {
               fontSize: "clamp(5rem, 14vw, 10rem)",
               letterSpacing: "-0.04em",
               lineHeight: 1,
-              background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+              background: "linear-gradient(135deg, #a855f7, #22d3ee)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -133,7 +133,7 @@ export default function LoadingScreen() {
           style={{
             width: "min(58vw, 620px)",
             height: 1,
-            background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.85) 30%, rgba(6,182,212,0.85) 70%, transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.85) 30%, rgba(34,211,238,0.85) 70%, transparent)",
           }}
         />
 

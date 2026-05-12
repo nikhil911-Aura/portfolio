@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -79,16 +79,16 @@ export default function SectionDots() {
                 <motion.div
                   animate={{
                     scale: isActive ? 1.45 : 1,
-                    backgroundColor: isActive ? "#9333ea" : "transparent",
-                    borderColor: isActive ? "#9333ea" : "rgba(147,51,234,0.35)",
-                    boxShadow: isActive ? "0 0 8px rgba(147,51,234,0.7)" : "none",
+                    backgroundColor: isActive ? "#a855f7" : "transparent",
+                    borderColor: isActive ? "#a855f7" : "rgba(168,85,247,0.35)",
+                    boxShadow: isActive ? "0 0 8px rgba(168,85,247,0.7)" : "none",
                   }}
                   transition={{ duration: 0.22, ease: "easeOut" }}
                   style={{
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    border: "1.5px solid rgba(147,51,234,0.35)",
+                    border: "1.5px solid rgba(168,85,247,0.35)",
                     flexShrink: 0,
                   }}
                 />

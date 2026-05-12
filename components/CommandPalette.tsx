@@ -203,8 +203,8 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
               className="rounded-2xl overflow-hidden"
               style={{
                 background: "rgba(10,10,20,0.95)",
-                border: "1px solid rgba(147,51,234,0.2)",
-                boxShadow: "0 25px 80px rgba(0,0,0,0.6), 0 0 60px rgba(147,51,234,0.08)",
+                border: "1px solid rgba(168,85,247,0.2)",
+                boxShadow: "0 25px 80px rgba(0,0,0,0.6), 0 0 60px rgba(168,85,247,0.08)",
                 backdropFilter: "blur(40px)",
               }}
             >
@@ -259,7 +259,7 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
                               whileTap={{ scale: 0.98 }}
                               className="w-full flex items-center gap-3 px-3 py-2.5 text-left transition-all duration-100 mx-1 rounded-xl"
                               style={{
-                                background: isSelected ? "rgba(147,51,234,0.12)" : "transparent",
+                                background: isSelected ? "rgba(168,85,247,0.12)" : "transparent",
                                 width: "calc(100% - 8px)",
                               }}
                             >
@@ -267,7 +267,7 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
                                 className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                                 style={{
                                   background: isSelected
-                                    ? "rgba(147,51,234,0.2)"
+                                    ? "rgba(168,85,247,0.2)"
                                     : "rgba(255,255,255,0.04)",
                                 }}
                               >

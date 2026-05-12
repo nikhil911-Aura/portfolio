@@ -53,7 +53,7 @@ function HeroCounter({ to, suffix, active }: { to: number; suffix: string; activ
     <span
       ref={spanRef}
       className="text-2xl font-bold"
-      style={{ background: "linear-gradient(135deg, #9333ea, #06b6d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+      style={{ background: "linear-gradient(135deg, #a855f7, #f97316)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
     >
       0{suffix}
     </span>
@@ -159,7 +159,7 @@ export default function Hero() {
         className="absolute inset-0 opacity-40 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(147,51,234,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(147,51,234,0.07) 1px, transparent 1px)",
+            "linear-gradient(rgba(168,85,247,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.07) 1px, transparent 1px)",
           backgroundSize: "80px 80px",
         }}
       />
@@ -167,7 +167,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(147,51,234,0.06) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(168,85,247,0.06) 0%, transparent 70%)",
         }}
       />
 
@@ -262,8 +262,8 @@ export default function Hero() {
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
                 style={{
-                  background: "rgba(147,51,234,0.1)",
-                  border: "1px solid rgba(147,51,234,0.3)",
+                  background: "rgba(168,85,247,0.1)",
+                  border: "1px solid rgba(168,85,247,0.3)",
                 }}
               >
                 <span className="relative flex h-2 w-2">
@@ -281,7 +281,7 @@ export default function Hero() {
                 <br />
                 <span
                   style={{
-                    background: "linear-gradient(135deg, #9333ea, #3b82f6, #06b6d4)",
+                    background: "linear-gradient(135deg, #a855f7 0%, #f97316 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -336,8 +336,8 @@ export default function Hero() {
               <div
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
                 style={{
-                  background: "rgba(6,182,212,0.08)",
-                  border: "1px solid rgba(6,182,212,0.2)",
+                  background: "rgba(34,211,238,0.08)",
+                  border: "1px solid rgba(34,211,238,0.2)",
                 }}
               >
                 <Rocket size={14} className="text-cyan-400" />
@@ -445,8 +445,8 @@ function MagneticButton({ children, onClick, href, target, primary }: MagneticBu
 
   const commonStyle = primary
     ? {
-        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-        boxShadow: "0 0 25px rgba(147,51,234,0.35)",
+        background: "linear-gradient(135deg, #a855f7, #f97316)",
+        boxShadow: "0 0 28px rgba(249,115,22,0.3), 0 0 20px rgba(168,85,247,0.25)",
       }
     : {
         background: "var(--card-bg)",

@@ -17,7 +17,7 @@ const techs = [
   { name: "PostgreSQL", color: "#336791" },
   { name: "Redis", color: "#DC382D" },
   { name: "Prisma", color: "#2D3748" },
-  { name: "GenAI", color: "#9333ea" },
+  { name: "GenAI", color: "#a855f7" },
   { name: "n8n", color: "#EA4B71" },
   { name: "GraphQL", color: "#E10098" },
 ];
@@ -26,7 +26,7 @@ const doubled = [...techs, ...techs];
 
 export default function TrustBar() {
   const { theme } = useTheme();
-  const edgeBg = theme === "light" ? "#f1f5f9" : "#050507";
+  const edgeBg = theme === "light" ? "#f1f5f9" : "#060410";
 
   return (
     <section className="relative py-16 overflow-hidden">
@@ -78,7 +78,7 @@ export default function TrustBar() {
       <div
         className="mt-16 h-[1px] mx-auto"
         style={{
-          background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.3), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)",
           maxWidth: "800px",
         }}
       />

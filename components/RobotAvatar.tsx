@@ -40,26 +40,26 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* ── Antenna ── */}
-      <line x1="36" y1="8" x2="36" y2="-4" stroke="#9333ea" strokeWidth="2" strokeLinecap="round" />
+      <line x1="36" y1="8" x2="36" y2="-4" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" />
       <motion.circle
         cx="36"
         cy="-8"
         r="4"
-        fill="#9333ea"
+        fill="#a855f7"
         animate={{ opacity: [0.6, 1, 0.6], scale: [0.85, 1.15, 0.85] }}
         transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* ── Head ── */}
-      <rect x="8" y="8" width="56" height="46" rx="10" fill="#130825" stroke="#9333ea" strokeWidth="1.5" />
+      <rect x="8" y="8" width="56" height="46" rx="10" fill="#130825" stroke="#a855f7" strokeWidth="1.5" />
       {/* head highlight */}
       <rect x="12" y="10" width="40" height="8" rx="4" fill="rgba(255,255,255,0.04)" />
 
       {/* ── Visor strip ── */}
       <rect x="13" y="26" width="46" height="18" rx="5"
-        fill="rgba(6,182,212,0.12)" stroke="#06b6d4" strokeWidth="1.2" />
+        fill="rgba(34,211,238,0.12)" stroke="#22d3ee" strokeWidth="1.2" />
       {/* visor inner glow */}
-      <rect x="15" y="28" width="42" height="14" rx="4" fill="rgba(6,182,212,0.06)" />
+      <rect x="15" y="28" width="42" height="14" rx="4" fill="rgba(34,211,238,0.06)" />
 
       {/* ── Eyes (inside visor) ── */}
       {/* Left eye */}
@@ -68,8 +68,8 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
         style={{ transformOrigin: "24px 35px" }}
         transition={{ duration: 0.12 }}
       >
-        <ellipse cx="24" cy="35" rx="7" ry="7" fill="#06b6d4" opacity="0.25" />
-        <ellipse cx="24" cy="35" rx="5" ry="5" fill="#06b6d4" opacity="0.6" />
+        <ellipse cx="24" cy="35" rx="7" ry="7" fill="#22d3ee" opacity="0.25" />
+        <ellipse cx="24" cy="35" rx="5" ry="5" fill="#22d3ee" opacity="0.6" />
         <ellipse cx="24" cy="35" rx="3" ry="3" fill="#e0f7ff" />
         <ellipse cx="22.5" cy="33.5" rx="1.2" ry="1.2" fill="white" opacity="0.8" />
       </motion.g>
@@ -80,32 +80,32 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
         style={{ transformOrigin: "48px 35px" }}
         transition={{ duration: 0.12 }}
       >
-        <ellipse cx="48" cy="35" rx="7" ry="7" fill="#06b6d4" opacity="0.25" />
-        <ellipse cx="48" cy="35" rx="5" ry="5" fill="#06b6d4" opacity="0.6" />
+        <ellipse cx="48" cy="35" rx="7" ry="7" fill="#22d3ee" opacity="0.25" />
+        <ellipse cx="48" cy="35" rx="5" ry="5" fill="#22d3ee" opacity="0.6" />
         <ellipse cx="48" cy="35" rx="3" ry="3" fill="#e0f7ff" />
         <ellipse cx="46.5" cy="33.5" rx="1.2" ry="1.2" fill="white" opacity="0.8" />
       </motion.g>
 
       {/* ── Mouth / speaker ── */}
-      <rect x="22" y="50" width="28" height="2" rx="1" fill="rgba(147,51,234,0.3)" />
-      <rect x="26" y="50" width="4" height="2" rx="1" fill="rgba(147,51,234,0.6)" />
-      <rect x="34" y="50" width="4" height="2" rx="1" fill="rgba(147,51,234,0.6)" />
-      <rect x="42" y="50" width="4" height="2" rx="1" fill="rgba(147,51,234,0.6)" />
+      <rect x="22" y="50" width="28" height="2" rx="1" fill="rgba(168,85,247,0.3)" />
+      <rect x="26" y="50" width="4" height="2" rx="1" fill="rgba(168,85,247,0.6)" />
+      <rect x="34" y="50" width="4" height="2" rx="1" fill="rgba(168,85,247,0.6)" />
+      <rect x="42" y="50" width="4" height="2" rx="1" fill="rgba(168,85,247,0.6)" />
 
       {/* ── Neck ── */}
-      <rect x="28" y="54" width="16" height="8" rx="3" fill="#1a0a2e" stroke="rgba(147,51,234,0.3)" strokeWidth="1" />
+      <rect x="28" y="54" width="16" height="8" rx="3" fill="#1a0a2e" stroke="rgba(168,85,247,0.3)" strokeWidth="1" />
 
       {/* ── Body ── */}
-      <rect x="6" y="62" width="60" height="34" rx="10" fill="#130825" stroke="#9333ea" strokeWidth="1.5" />
+      <rect x="6" y="62" width="60" height="34" rx="10" fill="#130825" stroke="#a855f7" strokeWidth="1.5" />
       {/* chest panel */}
       <rect x="14" y="68" width="44" height="22" rx="6"
-        fill="rgba(147,51,234,0.1)" stroke="rgba(147,51,234,0.25)" strokeWidth="1" />
+        fill="rgba(168,85,247,0.1)" stroke="rgba(168,85,247,0.25)" strokeWidth="1" />
       {/* LED indicators */}
-      <motion.circle cx="24" cy="79" r="3.5" fill="#9333ea"
+      <motion.circle cx="24" cy="79" r="3.5" fill="#a855f7"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.2, repeat: Infinity }}
       />
-      <motion.circle cx="36" cy="79" r="3.5" fill="#06b6d4"
+      <motion.circle cx="36" cy="79" r="3.5" fill="#22d3ee"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.2, repeat: Infinity, delay: 0.4 }}
       />
@@ -116,14 +116,14 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
       {/* core power bar */}
       <rect x="18" y="85" width="36" height="3" rx="1.5" fill="rgba(255,255,255,0.06)" />
       <motion.rect x="18" y="85" width="28" height="3" rx="1.5"
-        fill="rgba(147,51,234,0.6)"
+        fill="rgba(168,85,247,0.6)"
         animate={{ width: [20, 36, 20] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* ── Left arm ── */}
-      <rect x="-6" y="64" width="12" height="28" rx="6" fill="#1a0a2e" stroke="rgba(147,51,234,0.35)" strokeWidth="1.2" />
-      <circle cx="0" cy="93" r="6" fill="#1a0a2e" stroke="rgba(147,51,234,0.4)" strokeWidth="1.2" />
+      <rect x="-6" y="64" width="12" height="28" rx="6" fill="#1a0a2e" stroke="rgba(168,85,247,0.35)" strokeWidth="1.2" />
+      <circle cx="0" cy="93" r="6" fill="#1a0a2e" stroke="rgba(168,85,247,0.4)" strokeWidth="1.2" />
 
       {/* ── Right arm (waves when prop is true) ── */}
       <motion.g
@@ -131,13 +131,13 @@ function RobotSVG({ blinking, waving }: { blinking: boolean; waving: boolean }) 
         animate={waving ? { rotate: [-10, -45, -10] } : { rotate: 0 }}
         transition={waving ? { duration: 0.5, repeat: Infinity, ease: "easeInOut" } : { duration: 0.3 }}
       >
-        <rect x="66" y="64" width="12" height="28" rx="6" fill="#1a0a2e" stroke="rgba(147,51,234,0.35)" strokeWidth="1.2" />
-        <circle cx="72" cy="93" r="6" fill="#1a0a2e" stroke="rgba(147,51,234,0.4)" strokeWidth="1.2" />
+        <rect x="66" y="64" width="12" height="28" rx="6" fill="#1a0a2e" stroke="rgba(168,85,247,0.35)" strokeWidth="1.2" />
+        <circle cx="72" cy="93" r="6" fill="#1a0a2e" stroke="rgba(168,85,247,0.4)" strokeWidth="1.2" />
       </motion.g>
 
       {/* ── Legs ── */}
-      <rect x="14" y="94" width="16" height="2" rx="1" fill="rgba(147,51,234,0.2)" />
-      <rect x="42" y="94" width="16" height="2" rx="1" fill="rgba(147,51,234,0.2)" />
+      <rect x="14" y="94" width="16" height="2" rx="1" fill="rgba(168,85,247,0.2)" />
+      <rect x="42" y="94" width="16" height="2" rx="1" fill="rgba(168,85,247,0.2)" />
     </svg>
   );
 }
@@ -255,11 +255,11 @@ export default function RobotAvatar() {
                 background: isFact ? "rgba(10,4,24,0.96)" : "rgba(5,5,7,0.92)",
                 border: isFact
                   ? "1px solid rgba(99,102,241,0.6)"
-                  : "1px solid rgba(147,51,234,0.45)",
+                  : "1px solid rgba(168,85,247,0.45)",
                 color: "#e2e8f0",
                 boxShadow: isFact
                   ? "0 4px 24px rgba(99,102,241,0.3)"
-                  : "0 4px 20px rgba(147,51,234,0.2)",
+                  : "0 4px 20px rgba(168,85,247,0.2)",
                 backdropFilter: "blur(10px)",
                 maxWidth: isFact ? 240 : 180,
                 textAlign: "center",
@@ -281,7 +281,7 @@ export default function RobotAvatar() {
                   width: 10,
                   height: 10,
                   background: "rgba(5,5,7,0.92)",
-                  border: "1px solid rgba(147,51,234,0.45)",
+                  border: "1px solid rgba(168,85,247,0.45)",
                   borderTop: "none",
                   borderLeft: "none",
                   rotate: "45deg",
@@ -302,7 +302,7 @@ export default function RobotAvatar() {
             style={{
               width: 48,
               height: 10,
-              background: "radial-gradient(ellipse, rgba(147,51,234,0.45), transparent)",
+              background: "radial-gradient(ellipse, rgba(168,85,247,0.45), transparent)",
               filter: "blur(4px)",
               transform: "translateX(-50%)",
             }}
@@ -318,7 +318,7 @@ export default function RobotAvatar() {
               exit={{ opacity: 0 }}
               className="absolute inset-0 rounded-2xl pointer-events-none"
               style={{
-                outline: "2px solid rgba(147,51,234,0.5)",
+                outline: "2px solid rgba(168,85,247,0.5)",
                 outlineOffset: 6,
               }}
             />

@@ -15,7 +15,7 @@ const deployments = [
     status: "Production",
     statusColor: "#22c55e",
     gradient: "from-purple-500/20 to-blue-500/20",
-    accentColor: "#9333ea",
+    accentColor: "#a855f7",
   },
   {
     name: "NovaChat AI",
@@ -26,7 +26,7 @@ const deployments = [
     status: "Production",
     statusColor: "#22c55e",
     gradient: "from-cyan-500/20 to-purple-500/20",
-    accentColor: "#06b6d4",
+    accentColor: "#22d3ee",
   },
   {
     name: "Book Your Event",
@@ -64,7 +64,7 @@ export default function VercelProjects() {
         style={{
           width: "800px",
           height: "400px",
-          background: "radial-gradient(ellipse, rgba(147,51,234,0.04) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(168,85,247,0.04) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
       />
@@ -84,7 +84,7 @@ export default function VercelProjects() {
             Shipped to{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #22d3ee)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

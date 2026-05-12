@@ -77,13 +77,13 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300"
               style={{
-                background: "linear-gradient(135deg, rgba(147,51,234,0.3), rgba(6,182,212,0.2))",
-                border: "1px solid rgba(147,51,234,0.4)",
+                background: "linear-gradient(135deg, rgba(168,85,247,0.25), rgba(249,115,22,0.15))",
+                border: "1px solid rgba(168,85,247,0.45)",
               }}
             >
               <span
                 style={{
-                  background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                  background: "linear-gradient(135deg, #a855f7, #f97316)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -111,8 +111,8 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
                     layoutId="nav-indicator"
                     className="absolute inset-0 rounded-lg"
                     style={{
-                      background: "rgba(147,51,234,0.15)",
-                      border: "1px solid rgba(147,51,234,0.2)",
+                      background: "linear-gradient(135deg, rgba(168,85,247,0.15), rgba(249,115,22,0.08))",
+                      border: "1px solid rgba(168,85,247,0.25)",
                     }}
                     transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                   />
@@ -185,8 +185,8 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
               onClick={() => scrollTo("#contact")}
               className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-300 relative overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                boxShadow: "0 0 20px rgba(147,51,234,0.3)",
+                background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                boxShadow: "0 0 20px rgba(168,85,247,0.3)",
               }}
             >
               <motion.span
@@ -241,8 +241,8 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
                       style={
                         isActive
                           ? {
-                              background: "rgba(147,51,234,0.15)",
-                              border: "1px solid rgba(147,51,234,0.2)",
+                              background: "rgba(168,85,247,0.15)",
+                              border: "1px solid rgba(168,85,247,0.2)",
                               color: "#fff",
                             }
                           : { color: "#94a3b8" }
@@ -263,7 +263,7 @@ export default function Navigation({ onCommandPalette }: NavigationProps) {
                   transition={{ delay: navLinks.length * 0.05 }}
                   onClick={() => scrollTo("#contact")}
                   className="mt-2 px-4 py-3 rounded-xl text-center text-white font-medium"
-                  style={{ background: "linear-gradient(135deg, #9333ea, #3b82f6)" }}
+                  style={{ background: "linear-gradient(135deg, #a855f7, #6366f1)" }}
                 >
                   Hire Me
                 </motion.button>

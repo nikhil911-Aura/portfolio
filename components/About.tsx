@@ -4,20 +4,38 @@ import { useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Terminal, Code2, Server, Cloud, Cpu, MapPin, Coffee } from "lucide-react";
 
-const codeLines = [
-  { tokens: [{ text: "const", color: "#9333ea" }, { text: " engineer", color: "#e2e8f0" }, { text: " = {", color: "#94a3b8" }] },
-  { tokens: [{ text: "  name:", color: "#94a3b8" }, { text: ' "Nikhil Singh"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: "  role:", color: "#94a3b8" }, { text: ' "Full Stack + DevOps + GenAI"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: "  stack:", color: "#94a3b8" }, { text: " [", color: "#e2e8f0" }] },
-  { tokens: [{ text: '    "React"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Next.js"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Node.js"', color: "#3b82f6" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: '    "Docker"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Kubernetes"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"AWS"', color: "#3b82f6" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: '    "GenAI"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"n8n"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"ArgoCD"', color: "#3b82f6" }] },
-  { tokens: [{ text: "  ],", color: "#e2e8f0" }] },
-  { tokens: [{ text: "  experience:", color: "#94a3b8" }, { text: ' "1+ yr @ IBR Infotech"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: "  passion:", color: "#94a3b8" }, { text: ' "Cloud + AI + Automation"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
-  { tokens: [{ text: "  available:", color: "#94a3b8" }, { text: " true", color: "#9333ea" }] },
-  { tokens: [{ text: "};", color: "#94a3b8" }] },
-];
+// Alphawizz internship: Jan 2025 – Jun 2025 (fixed 6 months)
+const INTERNSHIP_MONTHS = 6;
+// IBR Infotech start: Feb 23 2026 — update when leaving org
+const EXP_START = new Date(2026, 1, 23);
+
+function getExperienceMonths(): number {
+  const now = new Date();
+  const ibrMonths =
+    (now.getFullYear() - EXP_START.getFullYear()) * 12 +
+    (now.getMonth() - EXP_START.getMonth());
+  return INTERNSHIP_MONTHS + Math.max(0, ibrMonths);
+}
+
+function buildCodeLines(expMonths: number) {
+  const label = expMonths >= 12
+    ? `${Math.floor(expMonths / 12)}+ yr @ IBR Infotech`
+    : `${expMonths}+ mo @ IBR Infotech`;
+  return [
+    { tokens: [{ text: "const", color: "#9333ea" }, { text: " engineer", color: "#e2e8f0" }, { text: " = {", color: "#94a3b8" }] },
+    { tokens: [{ text: "  name:", color: "#94a3b8" }, { text: ' "Nikhil Singh"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: "  role:", color: "#94a3b8" }, { text: ' "Full Stack + DevOps + GenAI"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: "  stack:", color: "#94a3b8" }, { text: " [", color: "#e2e8f0" }] },
+    { tokens: [{ text: '    "React"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Next.js"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Node.js"', color: "#3b82f6" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: '    "Docker"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"Kubernetes"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"AWS"', color: "#3b82f6" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: '    "GenAI"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"n8n"', color: "#3b82f6" }, { text: ", ", color: "#94a3b8" }, { text: '"ArgoCD"', color: "#3b82f6" }] },
+    { tokens: [{ text: "  ],", color: "#e2e8f0" }] },
+    { tokens: [{ text: "  experience:", color: "#94a3b8" }, { text: ` "${label}"`, color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: "  passion:", color: "#94a3b8" }, { text: ' "Cloud + AI + Automation"', color: "#06b6d4" }, { text: ",", color: "#94a3b8" }] },
+    { tokens: [{ text: "  available:", color: "#94a3b8" }, { text: " true", color: "#9333ea" }] },
+    { tokens: [{ text: "};", color: "#94a3b8" }] },
+  ];
+}
 
 const pillars = [
   { icon: Code2,   title: "Full Stack",        desc: "MERN stack apps with clean architecture and optimized performance.",   color: "#3b82f6" },
@@ -26,11 +44,10 @@ const pillars = [
   { icon: Server,  title: "Backend Systems",    desc: "Scalable REST APIs, microservices, and cloud-native architecture.",    color: "#ec4899" },
 ];
 
-const stats = [
-  { value: 1,  suffix: "+ yr",      label: "Experience"   },
-  { value: 10, suffix: "+",         label: "Projects"     },
-  { value: 20, suffix: "+",         label: "Technologies" },
-  { value: 30, suffix: "+",         label: "GitHub Repos" },
+const BASE_STATS = [
+  { value: 10, suffix: "+", label: "Projects"     },
+  { value: 20, suffix: "+", label: "Technologies" },
+  { value: 30, suffix: "+", label: "GitHub Repos" },
 ];
 
 function Counter({ to, suffix, inView }: { to: number; suffix: string; inView: boolean }) {
@@ -56,6 +73,15 @@ function Counter({ to, suffix, inView }: { to: number; suffix: string; inView: b
 export default function About() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  const expMonths = getExperienceMonths();
+  const expValue = expMonths >= 12 ? Math.floor(expMonths / 12) : expMonths;
+  const expSuffix = expMonths >= 12 ? "+ yr" : "+ mo";
+  const stats = [
+    { value: expValue, suffix: expSuffix, label: "Experience" },
+    ...BASE_STATS,
+  ];
+  const codeLines = buildCodeLines(expMonths);
 
   return (
     <section id="about" className="relative py-24 overflow-hidden">

@@ -90,7 +90,7 @@ export default function GitHub() {
         style={{
           width: "600px",
           height: "600px",
-          background: "radial-gradient(circle, rgba(147,51,234,0.05) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
       />
@@ -110,7 +110,7 @@ export default function GitHub() {
             GitHub{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #f97316)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -128,10 +128,10 @@ export default function GitHub() {
           achievements={primaryAchievements}
           loading={loading}
           inView={inView}
-          accentColor="#9333ea"
+          accentColor="#a855f7"
           accentLight="#a855f7"
-          accentBg="rgba(147,51,234,0.1)"
-          accentBorder="rgba(147,51,234,0.2)"
+          accentBg="rgba(168,85,247,0.1)"
+          accentBorder="rgba(168,85,247,0.2)"
           delay={0}
         />
 
@@ -151,10 +151,10 @@ export default function GitHub() {
           achievements={secondaryAchievements}
           loading={loading}
           inView={inView}
-          accentColor="#06b6d4"
+          accentColor="#22d3ee"
           accentLight="#22d3ee"
-          accentBg="rgba(6,182,212,0.1)"
-          accentBorder="rgba(6,182,212,0.2)"
+          accentBg="rgba(34,211,238,0.1)"
+          accentBorder="rgba(34,211,238,0.2)"
           delay={0.15}
         />
       </div>

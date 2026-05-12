@@ -55,7 +55,7 @@ export default function EasterEgg() {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(147,51,234,0.15), transparent)",
+              background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(168,85,247,0.15), transparent)",
             }}
           />
 
@@ -67,8 +67,8 @@ export default function EasterEgg() {
             className="relative rounded-2xl p-8 text-center max-w-md mx-4"
             style={{
               background: "rgba(5,5,7,0.9)",
-              border: "1px solid rgba(147,51,234,0.4)",
-              boxShadow: "0 0 80px rgba(147,51,234,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
+              border: "1px solid rgba(168,85,247,0.4)",
+              boxShadow: "0 0 80px rgba(168,85,247,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -76,7 +76,7 @@ export default function EasterEgg() {
             <div
               className="absolute top-0 left-0 right-0 h-px rounded-t-2xl"
               style={{
-                background: "linear-gradient(90deg, transparent, #9333ea, #06b6d4, transparent)",
+                background: "linear-gradient(90deg, transparent, #a855f7, #22d3ee, transparent)",
               }}
             />
 
@@ -98,8 +98,8 @@ export default function EasterEgg() {
                   transition={{ delay: 0.1 + i * 0.08, type: "spring", bounce: 0.5 }}
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
                   style={{
-                    background: "linear-gradient(135deg, rgba(147,51,234,0.3), rgba(6,182,212,0.2))",
-                    border: "1px solid rgba(147,51,234,0.3)",
+                    background: "linear-gradient(135deg, rgba(168,85,247,0.3), rgba(34,211,238,0.2))",
+                    border: "1px solid rgba(168,85,247,0.3)",
                   }}
                 >
                   <Icon size={16} className="text-purple-400" />
@@ -116,8 +116,8 @@ export default function EasterEgg() {
               <div
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs mb-3"
                 style={{
-                  background: "rgba(147,51,234,0.15)",
-                  border: "1px solid rgba(147,51,234,0.3)",
+                  background: "rgba(168,85,247,0.15)",
+                  border: "1px solid rgba(168,85,247,0.3)",
                   color: "#a855f7",
                 }}
               >
@@ -135,7 +135,7 @@ export default function EasterEgg() {
               transition={{ delay: 0.4 }}
               className="text-2xl font-bold mb-3"
               style={{
-                background: "linear-gradient(135deg, #9333ea, #3b82f6, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #6366f1, #22d3ee)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -192,8 +192,8 @@ export default function EasterEgg() {
               onClick={() => setActive(false)}
               className="w-full py-2.5 rounded-xl text-sm font-semibold text-white"
               style={{
-                background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                boxShadow: "0 0 25px rgba(147,51,234,0.3)",
+                background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                boxShadow: "0 0 25px rgba(168,85,247,0.3)",
               }}
             >
               Exit Developer Mode

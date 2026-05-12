@@ -10,7 +10,7 @@ const skillCategories = [
     label: "Frontend",
     subtitle: "Interfaces people love to use",
     icon: Layers,
-    color: "#3b82f6",
+    color: "#6366f1",
     num: "01",
     skills: [
       { name: "React", level: 90 },
@@ -26,7 +26,7 @@ const skillCategories = [
     label: "Backend",
     subtitle: "APIs and systems built to scale",
     icon: Server,
-    color: "#9333ea",
+    color: "#a855f7",
     num: "02",
     skills: [
       { name: "Node.js", level: 88 },
@@ -42,7 +42,7 @@ const skillCategories = [
     label: "Databases",
     subtitle: "Data stored and retrieved fast",
     icon: Database,
-    color: "#06b6d4",
+    color: "#22d3ee",
     num: "03",
     skills: [
       { name: "MongoDB", level: 85 },
@@ -406,7 +406,7 @@ export default function Skills() {
           width: 600,
           height: 600,
           background:
-            "radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 70%)",
           filter: "blur(40px)",
         }}
       />
@@ -416,7 +416,7 @@ export default function Skills() {
           width: 600,
           height: 600,
           background:
-            "radial-gradient(ellipse, rgba(147,51,234,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(168,85,247,0.04) 0%, transparent 70%)",
           filter: "blur(40px)",
         }}
       />
@@ -437,7 +437,7 @@ export default function Skills() {
             Technical{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #f97316)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

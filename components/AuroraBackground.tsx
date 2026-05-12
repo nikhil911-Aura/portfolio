@@ -1,13 +1,14 @@
 "use client";
 
 // Pure CSS aurora — no canvas, no JS per frame, runs on GPU compositor thread
+// Palette: violet #a855f7 · orange #f97316 · cyan #22d3ee · indigo #6366f1
 const blobs = [
-  { x: 18,  y: 28, size: 65, rgb: "147,51,234",  alpha: 0.28, duration: 18, delay: 0   },
-  { x: 72,  y: 38, size: 60, rgb: "6,182,212",   alpha: 0.22, duration: 22, delay: -6  },
-  { x: 50,  y: 75, size: 55, rgb: "59,130,246",  alpha: 0.18, duration: 26, delay: -11 },
-  { x: 85,  y: 15, size: 48, rgb: "99,102,241",  alpha: 0.16, duration: 20, delay: -4  },
-  { x: 10,  y: 80, size: 44, rgb: "20,184,166",  alpha: 0.14, duration: 24, delay: -9  },
-  { x: 55,  y: 50, size: 36, rgb: "6,182,212",   alpha: 0.12, duration: 16, delay: -2  },
+  { x: 18,  y: 28, size: 68, rgb: "168,85,247",   alpha: 0.28, duration: 18, delay: 0   }, // violet
+  { x: 72,  y: 38, size: 62, rgb: "249,115,22",   alpha: 0.20, duration: 22, delay: -6  }, // orange
+  { x: 50,  y: 75, size: 56, rgb: "34,211,238",   alpha: 0.18, duration: 26, delay: -11 }, // cyan
+  { x: 85,  y: 15, size: 50, rgb: "99,102,241",   alpha: 0.16, duration: 20, delay: -4  }, // indigo
+  { x: 10,  y: 80, size: 45, rgb: "168,85,247",   alpha: 0.14, duration: 24, delay: -9  }, // violet
+  { x: 55,  y: 50, size: 38, rgb: "249,115,22",   alpha: 0.10, duration: 16, delay: -2  }, // orange
 ];
 
 export default function AuroraBackground() {

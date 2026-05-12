@@ -82,8 +82,8 @@ function ContactButton({ onNavigate }: { onNavigate: () => void }) {
       onClick={onNavigate}
       className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white w-fit"
       style={{
-        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-        boxShadow: "0 4px 16px rgba(147,51,234,0.4)",
+        background: "linear-gradient(135deg, #a855f7, #6366f1)",
+        boxShadow: "0 4px 16px rgba(168,85,247,0.4)",
       }}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
@@ -98,7 +98,7 @@ type Provider = "groq" | "cerebras";
 
 const PROVIDERS: { id: Provider; label: string; color: string }[] = [
   { id: "groq", label: "Groq", color: "#f97316" },
-  { id: "cerebras", label: "Cerebras", color: "#06b6d4" },
+  { id: "cerebras", label: "Cerebras", color: "#22d3ee" },
 ];
 
 export default function ChatWidget() {
@@ -242,9 +242,9 @@ export default function ChatWidget() {
               maxWidth: "calc(100vw - 24px)",
               height: 560,
               background: "rgba(7, 3, 17, 0.97)",
-              border: "1px solid rgba(147,51,234,0.2)",
+              border: "1px solid rgba(168,85,247,0.2)",
               boxShadow:
-                "0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03), 0 0 60px rgba(147,51,234,0.08)",
+                "0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03), 0 0 60px rgba(168,85,247,0.08)",
               backdropFilter: "blur(40px)",
             }}
           >
@@ -252,7 +252,7 @@ export default function ChatWidget() {
             <div
               className="h-px shrink-0"
               style={{
-                background: "linear-gradient(90deg, transparent 0%, #9333ea 30%, #06b6d4 70%, transparent 100%)",
+                background: "linear-gradient(90deg, transparent 0%, #a855f7 30%, #22d3ee 70%, transparent 100%)",
               }}
             />
 
@@ -266,8 +266,8 @@ export default function ChatWidget() {
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
                   style={{
-                    background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                    boxShadow: "0 0 20px rgba(147,51,234,0.4)",
+                    background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                    boxShadow: "0 0 20px rgba(168,85,247,0.4)",
                   }}
                 >
                   <Bot size={17} className="text-white" />
@@ -285,7 +285,7 @@ export default function ChatWidget() {
                 <p className="text-sm font-bold text-white leading-tight">Ask about Nikhil</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">
                   {SESSION_LIMIT - msgCount} msgs left · Llama 3 ·{" "}
-                  <span style={{ color: provider === "groq" ? "#f97316" : "#06b6d4" }}>
+                  <span style={{ color: provider === "groq" ? "#f97316" : "#22d3ee" }}>
                     {provider === "groq" ? "Groq" : "Cerebras"}
                   </span>
                 </p>
@@ -358,7 +358,7 @@ export default function ChatWidget() {
             {/* Messages area */}
             <div
               className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4"
-              style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(147,51,234,0.3) transparent" }}
+              style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(168,85,247,0.3) transparent" }}
               data-lenis-prevent
             >
               {/* Empty state */}
@@ -375,9 +375,9 @@ export default function ChatWidget() {
                       className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
                       style={{
                         background:
-                          "linear-gradient(135deg, rgba(147,51,234,0.18), rgba(6,182,212,0.1))",
-                        border: "1px solid rgba(147,51,234,0.25)",
-                        boxShadow: "0 0 30px rgba(147,51,234,0.1)",
+                          "linear-gradient(135deg, rgba(168,85,247,0.18), rgba(34,211,238,0.1))",
+                        border: "1px solid rgba(168,85,247,0.25)",
+                        boxShadow: "0 0 30px rgba(168,85,247,0.1)",
                       }}
                     >
                       <Sparkles size={22} className="text-purple-400" />
@@ -400,20 +400,20 @@ export default function ChatWidget() {
                         whileTap={{ scale: 0.98 }}
                         className="text-left p-3.5 rounded-xl transition-all duration-200"
                         style={{
-                          background: "rgba(147,51,234,0.06)",
-                          border: "1px solid rgba(147,51,234,0.15)",
+                          background: "rgba(168,85,247,0.06)",
+                          border: "1px solid rgba(168,85,247,0.15)",
                         }}
                         onMouseEnter={(e) => {
                           (e.currentTarget as HTMLElement).style.background =
-                            "rgba(147,51,234,0.12)";
+                            "rgba(168,85,247,0.12)";
                           (e.currentTarget as HTMLElement).style.borderColor =
-                            "rgba(147,51,234,0.3)";
+                            "rgba(168,85,247,0.3)";
                         }}
                         onMouseLeave={(e) => {
                           (e.currentTarget as HTMLElement).style.background =
-                            "rgba(147,51,234,0.06)";
+                            "rgba(168,85,247,0.06)";
                           (e.currentTarget as HTMLElement).style.borderColor =
-                            "rgba(147,51,234,0.15)";
+                            "rgba(168,85,247,0.15)";
                         }}
                       >
                         <span className="block text-base mb-1.5">{s.emoji}</span>
@@ -437,8 +437,8 @@ export default function ChatWidget() {
                     <div
                       className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                       style={{
-                        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                        boxShadow: "0 0 12px rgba(147,51,234,0.3)",
+                        background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                        boxShadow: "0 0 12px rgba(168,85,247,0.3)",
                       }}
                     >
                       <Bot size={12} className="text-white" />
@@ -454,9 +454,9 @@ export default function ChatWidget() {
                     style={
                       msg.role === "user"
                         ? {
-                            background: "linear-gradient(135deg, #9333ea, #7c3aed)",
+                            background: "linear-gradient(135deg, #a855f7, #7c3aed)",
                             color: "#fff",
-                            boxShadow: "0 4px 20px rgba(147,51,234,0.25)",
+                            boxShadow: "0 4px 20px rgba(168,85,247,0.25)",
                           }
                         : {
                             background: "rgba(255,255,255,0.05)",
@@ -486,7 +486,7 @@ export default function ChatWidget() {
                 >
                   <div
                     className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ background: "linear-gradient(135deg, #9333ea, #3b82f6)" }}
+                    style={{ background: "linear-gradient(135deg, #a855f7, #6366f1)" }}
                   >
                     <Bot size={12} className="text-white" />
                   </div>
@@ -579,8 +579,8 @@ export default function ChatWidget() {
                   disabled={!input.trim() || streaming || limitReached}
                   className="w-8 h-8 rounded-xl flex items-center justify-center disabled:opacity-30 shrink-0 transition-opacity"
                   style={{
-                    background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                    boxShadow: "0 0 16px rgba(147,51,234,0.35)",
+                    background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                    boxShadow: "0 0 16px rgba(168,85,247,0.35)",
                   }}
                 >
                   {streaming ? (
@@ -610,9 +610,9 @@ export default function ChatWidget() {
             className="flex items-center gap-2 px-3.5 py-2 rounded-full pointer-events-none self-end mb-1"
             style={{
               background: "rgba(7,3,17,0.92)",
-              border: "1px solid rgba(147,51,234,0.4)",
+              border: "1px solid rgba(168,85,247,0.4)",
               backdropFilter: "blur(16px)",
-              boxShadow: "0 4px 24px rgba(147,51,234,0.18)",
+              boxShadow: "0 4px 24px rgba(168,85,247,0.18)",
             }}
           >
             <motion.span
@@ -639,11 +639,11 @@ export default function ChatWidget() {
         style={{
           background: open
             ? "rgba(15,6,35,0.98)"
-            : "linear-gradient(135deg, #9333ea 0%, #6366f1 50%, #3b82f6 100%)",
-          border: "1px solid rgba(147,51,234,0.4)",
+            : "linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #6366f1 100%)",
+          border: "1px solid rgba(168,85,247,0.4)",
           boxShadow: open
             ? "0 8px 30px rgba(0,0,0,0.4)"
-            : "0 8px 32px rgba(147,51,234,0.55), 0 0 0 1px rgba(99,102,241,0.15)",
+            : "0 8px 32px rgba(168,85,247,0.55), 0 0 0 1px rgba(99,102,241,0.15)",
         }}
         aria-label="Toggle AI chat"
       >
@@ -653,8 +653,8 @@ export default function ChatWidget() {
             className="absolute inset-0 rounded-2xl"
             animate={{
               boxShadow: [
-                "0 0 0 0px rgba(147,51,234,0.45)",
-                "0 0 0 10px rgba(147,51,234,0)",
+                "0 0 0 0px rgba(168,85,247,0.45)",
+                "0 0 0 10px rgba(168,85,247,0)",
               ],
             }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}

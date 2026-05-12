@@ -56,7 +56,7 @@ export default function Footer() {
         <div
           className="absolute top-0 left-0 right-0 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.3), rgba(6,182,212,0.3), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.3), rgba(34,211,238,0.3), transparent)",
           }}
         />
 
@@ -67,13 +67,13 @@ export default function Footer() {
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold"
               style={{
-                background: "linear-gradient(135deg, rgba(147,51,234,0.3), rgba(6,182,212,0.2))",
-                border: "1px solid rgba(147,51,234,0.3)",
+                background: "linear-gradient(135deg, rgba(168,85,247,0.3), rgba(34,211,238,0.2))",
+                border: "1px solid rgba(168,85,247,0.3)",
               }}
             >
               <span
                 style={{
-                  background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                  background: "linear-gradient(135deg, #a855f7, #f97316)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",

@@ -12,7 +12,7 @@ const contactLinks = [
     label: "Email",
     value: "baghelnikhil911@gmail.com",
     href: "mailto:baghelnikhil911@gmail.com",
-    color: "#9333ea",
+    color: "#a855f7",
   },
   {
     icon: Phone,
@@ -108,7 +108,7 @@ export default function Contact() {
         style={{
           width: "800px",
           height: "400px",
-          background: "radial-gradient(ellipse, rgba(147,51,234,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(168,85,247,0.06) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
       />
@@ -128,7 +128,7 @@ export default function Contact() {
             Let&apos;s{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #9333ea, #06b6d4)",
+                background: "linear-gradient(135deg, #a855f7, #f97316)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -216,7 +216,7 @@ export default function Contact() {
               <div
                 className="absolute top-0 left-0 right-0 h-px"
                 style={{
-                  background: "linear-gradient(90deg, transparent, rgba(147,51,234,0.5), transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)",
                 }}
               />
 
@@ -306,8 +306,8 @@ export default function Contact() {
                       whileTap={{ scale: 0.98 }}
                       className="mt-2 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 disabled:opacity-70"
                       style={{
-                        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-                        boxShadow: "0 0 30px rgba(147,51,234,0.3)",
+                        background: "linear-gradient(135deg, #a855f7, #f97316)",
+                        boxShadow: "0 0 30px rgba(168,85,247,0.3)",
                       }}
                     >
                       {formState === "loading" ? (
@@ -361,8 +361,8 @@ function FormField({
         className="peer w-full px-4 pt-6 pb-2 rounded-xl text-sm text-white focus:outline-none transition-all duration-200"
         style={{
           background: "var(--input-bg)",
-          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "var(--card-border)"}`,
-          boxShadow: focused ? "0 0 0 3px rgba(147,51,234,0.08)" : "none",
+          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "var(--card-border)"}`,
+          boxShadow: focused ? "0 0 0 3px rgba(168,85,247,0.08)" : "none",
         }}
         placeholder=""
       />
@@ -386,7 +386,7 @@ function FormField({
         animate={{ scaleX: focused ? 1 : 0 }}
         initial={{ scaleX: 0 }}
         transition={{ duration: 0.2 }}
-        style={{ background: "linear-gradient(90deg, #9333ea, #06b6d4)" }}
+        style={{ background: "linear-gradient(90deg, #a855f7, #22d3ee)" }}
       />
     </div>
   );
@@ -418,8 +418,8 @@ function FloatingTextarea({
         className="w-full px-4 pt-7 pb-3 rounded-xl text-sm text-white resize-none focus:outline-none transition-all duration-200"
         style={{
           background: "var(--input-bg)",
-          border: `1px solid ${focused ? "rgba(147,51,234,0.5)" : "var(--card-border)"}`,
-          boxShadow: focused ? "0 0 0 3px rgba(147,51,234,0.08)" : "none",
+          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "var(--card-border)"}`,
+          boxShadow: focused ? "0 0 0 3px rgba(168,85,247,0.08)" : "none",
         }}
         placeholder=""
       />
@@ -442,7 +442,7 @@ function FloatingTextarea({
         animate={{ scaleX: focused ? 1 : 0 }}
         initial={{ scaleX: 0 }}
         transition={{ duration: 0.2 }}
-        style={{ background: "linear-gradient(90deg, #9333ea, #06b6d4)" }}
+        style={{ background: "linear-gradient(90deg, #a855f7, #22d3ee)" }}
       />
     </div>
   );
