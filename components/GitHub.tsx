@@ -83,43 +83,65 @@ export default function GitHub() {
   }, []);
 
   return (
-    <section id="github" className="relative py-24 overflow-hidden">
-      {/* Glow */}
-      <div
-        className="absolute top-0 right-0 pointer-events-none"
-        style={{
-          width: "600px",
-          height: "600px",
-          background: "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
+    <section id="github" className="relative py-24 overflow-hidden" style={{ background: "#0C0C0C" }}>
+      {/* Animated ambient orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.5, 1], opacity: [0.06, 0.15, 0.06] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute pointer-events-none"
+        style={{ top: "-10%", right: "-5%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(192,132,252,0.15) 0%, transparent 70%)", filter: "blur(80px)" }}
+      />
+      <motion.div
+        animate={{ scale: [1.3, 1, 1.3], opacity: [0.05, 0.12, 0.05] }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        className="absolute pointer-events-none"
+        style={{ bottom: "0%", left: "-5%", width: 650, height: 650, borderRadius: "50%", background: "radial-gradient(circle, rgba(103,232,249,0.12) 0%, transparent 70%)", filter: "blur(90px)" }}
+      />
+      <motion.div
+        animate={{ scale: [1, 1.4, 1], opacity: [0.03, 0.08, 0.03] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 9 }}
+        className="absolute pointer-events-none"
+        style={{ top: "40%", left: "30%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(165,180,252,0.1) 0%, transparent 70%)", filter: "blur(80px)" }}
       />
 
-      <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-16 text-center"
         >
-          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-            Open Source
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            GitHub{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #a855f7, #f97316)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Activity
-            </span>
+          <h2
+            className="hero-heading"
+            style={{
+              fontWeight: 900,
+              textTransform: "uppercase",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              fontSize: "clamp(3rem, 11vw, 130px)",
+              marginBottom: "1rem",
+            }}
+          >
+            GitHub
           </h2>
+          <p style={{ color: "#64748b", fontSize: "clamp(0.8rem, 1.2vw, 1rem)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+            Open Source Activity
+          </p>
         </motion.div>
+
+        {/* Animated gradient divider */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{
+            height: 1,
+            background: "linear-gradient(90deg, transparent, #c084fc, #67e8f9, transparent)",
+            marginBottom: "clamp(3rem, 5vw, 5rem)",
+            transformOrigin: "center",
+          }}
+        />
 
         {/* Primary account */}
         <AccountSection
@@ -128,10 +150,10 @@ export default function GitHub() {
           achievements={primaryAchievements}
           loading={loading}
           inView={inView}
-          accentColor="#a855f7"
-          accentLight="#a855f7"
-          accentBg="rgba(168,85,247,0.1)"
-          accentBorder="rgba(168,85,247,0.2)"
+          accentColor="#c084fc"
+          accentLight="#c084fc"
+          accentBg="rgba(192,132,252,0.1)"
+          accentBorder="rgba(192,132,252,0.2)"
           delay={0}
         />
 
@@ -141,7 +163,7 @@ export default function GitHub() {
           animate={inView ? { opacity: 1, scaleX: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="my-12 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, var(--card-border), transparent)" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)" }}
         />
 
         {/* Secondary account */}
@@ -151,10 +173,10 @@ export default function GitHub() {
           achievements={secondaryAchievements}
           loading={loading}
           inView={inView}
-          accentColor="#22d3ee"
-          accentLight="#22d3ee"
-          accentBg="rgba(34,211,238,0.1)"
-          accentBorder="rgba(34,211,238,0.2)"
+          accentColor="#67e8f9"
+          accentLight="#67e8f9"
+          accentBg="rgba(103,232,249,0.08)"
+          accentBorder="rgba(103,232,249,0.18)"
           delay={0.15}
         />
       </div>
@@ -185,7 +207,7 @@ function AchievementBadges({
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: delay + 0.4 }}
       className="mt-6 p-5 rounded-2xl"
-      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
     >
       <div className="flex items-center gap-2 mb-4">
         <Trophy size={14} style={{ color: accentColor }} />
@@ -251,7 +273,7 @@ function AchievementBadges({
             >
               <div
                 className="text-xs text-white px-2.5 py-1.5 rounded-lg max-w-48 text-center leading-snug"
-                style={{ background: "rgba(15,15,25,0.95)", border: "1px solid var(--card-border)" }}
+                style={{ background: "rgba(15,15,25,0.95)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <div className="font-semibold mb-0.5">{a.badge.displayName}</div>
                 <div className="text-slate-400 text-[10px] whitespace-normal">{a.badge.description}</div>
@@ -303,7 +325,7 @@ function AccountSection({
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, delay }}
         className="flex flex-wrap items-center justify-between gap-6 mb-6 p-5 rounded-2xl"
-        style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <div className="flex items-center gap-4">
           <div
@@ -370,7 +392,7 @@ function AccountSection({
             <div
               key={i}
               className="h-44 rounded-2xl animate-pulse"
-              style={{ background: "var(--card-bg)" }}
+              style={{ background: "rgba(255,255,255,0.05)" }}
             />
           ))}
         </div>
@@ -444,13 +466,13 @@ function RepoCard({
       transition={{ duration: 0.5, delay: baseDelay + 0.2 + index * 0.07 }}
       whileHover={{ y: -4, scale: 1.01 }}
       className="group p-5 rounded-2xl transition-all duration-300 flex flex-col"
-      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-2 min-w-0">
           <Code2 size={14} className="shrink-0" style={{ color: accentColor }} />
-          <h3 className="font-semibold text-sm truncate" style={{ color: "var(--text)" }}>
+          <h3 className="font-semibold text-sm truncate" style={{ color: "#e2e8f0" }}>
             {repo.name}
           </h3>
         </div>

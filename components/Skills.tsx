@@ -10,7 +10,7 @@ const skillCategories = [
     label: "Frontend",
     subtitle: "Interfaces people love to use",
     icon: Layers,
-    color: "#6366f1",
+    color: "#a5b4fc",
     num: "01",
     skills: [
       { name: "React", level: 90 },
@@ -26,7 +26,7 @@ const skillCategories = [
     label: "Backend",
     subtitle: "APIs and systems built to scale",
     icon: Server,
-    color: "#a855f7",
+    color: "#c084fc",
     num: "02",
     skills: [
       { name: "Node.js", level: 88 },
@@ -42,7 +42,7 @@ const skillCategories = [
     label: "Databases",
     subtitle: "Data stored and retrieved fast",
     icon: Database,
-    color: "#22d3ee",
+    color: "#67e8f9",
     num: "03",
     skills: [
       { name: "MongoDB", level: 85 },
@@ -57,7 +57,7 @@ const skillCategories = [
     label: "DevOps & Cloud",
     subtitle: "Ship fast, stay reliable",
     icon: Cloud,
-    color: "#ec4899",
+    color: "#f9a8d4",
     num: "04",
     skills: [
       { name: "Docker", level: 85 },
@@ -73,7 +73,7 @@ const skillCategories = [
     label: "AI & Automation",
     subtitle: "Building with intelligence",
     icon: Cpu,
-    color: "#f59e0b",
+    color: "#fcd34d",
     num: "05",
     skills: [
       { name: "OpenAI API", level: 82 },
@@ -293,8 +293,8 @@ function MobileCard({ cat, index }: { cat: Category; index: number }) {
       transition={{ delay: index * 0.08, duration: 0.45 }}
       className="rounded-2xl overflow-hidden"
       style={{
-        background: open ? `${cat.color}09` : "var(--card-bg)",
-        border: `1px solid ${open ? cat.color + "28" : "var(--card-border)"}`,
+        background: open ? `${cat.color}09` : "rgba(255,255,255,0.04)",
+        border: `1px solid ${open ? cat.color + "28" : "rgba(255,255,255,0.09)"}`,
         transition: "background 0.3s, border-color 0.3s",
       }}
     >
@@ -398,58 +398,66 @@ export default function Skills() {
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="skills" className="relative py-24 overflow-hidden">
-      {/* Ambient glows */}
-      <div
-        className="absolute top-1/4 left-1/4 pointer-events-none"
-        style={{
-          width: 600,
-          height: 600,
-          background:
-            "radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 70%)",
-          filter: "blur(40px)",
-        }}
+    <section id="skills" className="relative py-28 overflow-hidden" style={{ background: "#0C0C0C" }}>
+      {/* Animated ambient orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.5, 1], opacity: [0.07, 0.16, 0.07] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute pointer-events-none"
+        style={{ top: "-5%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(165,180,252,0.15) 0%, transparent 70%)", filter: "blur(80px)" }}
       />
-      <div
-        className="absolute bottom-1/4 right-1/4 pointer-events-none"
-        style={{
-          width: 600,
-          height: 600,
-          background:
-            "radial-gradient(ellipse, rgba(168,85,247,0.04) 0%, transparent 70%)",
-          filter: "blur(40px)",
-        }}
+      <motion.div
+        animate={{ scale: [1.4, 1, 1.4], opacity: [0.05, 0.12, 0.05] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        className="absolute pointer-events-none"
+        style={{ bottom: "-5%", right: "-8%", width: 800, height: 800, borderRadius: "50%", background: "radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%)", filter: "blur(90px)" }}
+      />
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.04, 0.09, 0.04] }}
+        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+        className="absolute pointer-events-none"
+        style={{ top: "45%", left: "35%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(103,232,249,0.1) 0%, transparent 70%)", filter: "blur(80px)" }}
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <motion.div
           ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-14"
         >
-          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-            Expertise
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            Technical{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #a855f7, #f97316)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Skills
-            </span>
+          <h2
+            className="hero-heading"
+            style={{
+              fontWeight: 900,
+              textTransform: "uppercase",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              fontSize: "clamp(3rem, 11vw, 130px)",
+              marginBottom: "1rem",
+            }}
+          >
+            Tech Stack
           </h2>
-          <p className="mt-4 text-slate-500 text-sm">
+          <p style={{ color: "#64748b", fontSize: "clamp(0.8rem, 1.2vw, 1rem)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
             5 domains · 28 technologies
           </p>
         </motion.div>
+
+        {/* Animated gradient divider */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={headerInView ? { scaleX: 1, opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{
+            height: 1,
+            background: "linear-gradient(90deg, transparent, #a5b4fc, #67e8f9, transparent)",
+            marginBottom: "clamp(3rem, 5vw, 5rem)",
+            transformOrigin: "center",
+          }}
+        />
 
         {/* ── Desktop bento grid ── */}
         <div className="hidden md:grid grid-cols-12 gap-4 auto-rows-[minmax(200px,auto)]">
@@ -500,8 +508,8 @@ export default function Skills() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-10 py-6 px-6 rounded-2xl text-center"
           style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.09)",
           }}
         >
           <p className="text-[10px] text-slate-700 tracking-[0.3em] uppercase mb-4">

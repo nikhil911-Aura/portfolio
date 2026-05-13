@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* ─── Jack-style hero gradient heading ─── */
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Kanit as primary body font ─── */
+html, body {
+  font-family: var(--font-kanit), 'Kanit', sans-serif;
+}
+
 /* ─── Theme tokens ─── */
 :root {
   --bg:          #060410;

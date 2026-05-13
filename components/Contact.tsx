@@ -79,6 +79,7 @@ export default function Contact() {
     <section
       id="contact"
       className="relative py-24 overflow-hidden"
+      style={{ background: "#0C0C0C" }}
       onMouseEnter={() => setBgHovered(true)}
       onMouseLeave={() => setBgHovered(false)}
     >
@@ -89,7 +90,7 @@ export default function Contact() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            filter: bgHovered ? "grayscale(0%) brightness(0.42) saturate(1.1)" : "grayscale(40%) brightness(0.3)",
+            filter: bgHovered ? "grayscale(0%) brightness(0.25) saturate(1.1)" : "grayscale(60%) brightness(0.15)",
             transition: "filter 0.8s ease",
           }}
         />
@@ -97,47 +98,44 @@ export default function Contact() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, var(--bg) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.3) 60%, var(--bg) 100%)",
+              "linear-gradient(to bottom, #0C0C0C 0%, rgba(12,12,12,0.55) 30%, rgba(12,12,12,0.55) 70%, #0C0C0C 100%)",
           }}
         />
       </div>
 
-      {/* Glow */}
+      {/* Purple glow */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
           width: "800px",
-          height: "400px",
-          background: "radial-gradient(ellipse, rgba(168,85,247,0.06) 0%, transparent 70%)",
-          filter: "blur(80px)",
+          height: "500px",
+          background: "radial-gradient(ellipse, rgba(147,51,234,0.12) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
       />
 
-      <div ref={ref} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div ref={ref} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-16 text-center"
         >
-          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-            Get In Touch
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            Let&apos;s{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #a855f7, #f97316)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Work Together
-            </span>
+          <h2
+            className="hero-heading"
+            style={{
+              fontWeight: 900,
+              textTransform: "uppercase",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              fontSize: "clamp(3rem, 11vw, 130px)",
+              marginBottom: "1.25rem",
+            }}
+          >
+            Contact
           </h2>
-          <p className="mt-4 text-slate-500 max-w-md mx-auto">
+          <p style={{ color: "#94a3b8", fontSize: "clamp(0.9rem, 1.4vw, 1.1rem)", maxWidth: 480, margin: "0 auto" }}>
             Whether it&apos;s a full-time role, freelance project, or just a conversation — I&apos;m open to it.
           </p>
         </motion.div>
@@ -153,8 +151,8 @@ export default function Contact() {
             <div
               className="p-6 rounded-2xl mb-2"
               style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(147,51,234,0.25)",
               }}
             >
               <h3 className="text-lg font-semibold text-white mb-2">
@@ -177,8 +175,8 @@ export default function Contact() {
                 whileHover={{ x: 4 }}
                 className="flex items-center gap-4 p-4 rounded-xl group transition-all duration-200"
                 style={{
-                  background: "var(--card-bg)",
-                  border: "1px solid var(--card-border)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
                 <div
@@ -208,8 +206,9 @@ export default function Contact() {
             <div
               className="p-6 sm:p-8 rounded-2xl relative overflow-hidden"
               style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                backdropFilter: "blur(12px)",
               }}
             >
               {/* Top gradient line */}
@@ -360,8 +359,8 @@ function FormField({
         onBlur={() => setFocused(false)}
         className="peer w-full px-4 pt-6 pb-2 rounded-xl text-sm text-white focus:outline-none transition-all duration-200"
         style={{
-          background: "var(--input-bg)",
-          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "var(--card-border)"}`,
+          background: "rgba(255,255,255,0.06)",
+          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "rgba(255,255,255,0.1)"}`,
           boxShadow: focused ? "0 0 0 3px rgba(168,85,247,0.08)" : "none",
         }}
         placeholder=""
@@ -417,8 +416,8 @@ function FloatingTextarea({
         onBlur={() => setFocused(false)}
         className="w-full px-4 pt-7 pb-3 rounded-xl text-sm text-white resize-none focus:outline-none transition-all duration-200"
         style={{
-          background: "var(--input-bg)",
-          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "var(--card-border)"}`,
+          background: "rgba(255,255,255,0.06)",
+          border: `1px solid ${focused ? "rgba(168,85,247,0.5)" : "rgba(255,255,255,0.1)"}`,
           boxShadow: focused ? "0 0 0 3px rgba(168,85,247,0.08)" : "none",
         }}
         placeholder=""

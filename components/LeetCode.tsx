@@ -41,7 +41,7 @@ function CircleProgress({
         cy={size / 2}
         r={radius}
         fill="none"
-        style={{ stroke: "var(--track-bg)" }}
+        style={{ stroke: "rgba(255,255,255,0.1)" }}
         strokeWidth={strokeWidth}
       />
       <motion.circle
@@ -56,7 +56,7 @@ function CircleProgress({
         initial={{ strokeDashoffset: circumference }}
         animate={{ strokeDashoffset: inView ? circumference * (1 - pct) : circumference }}
         transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-        style={{ filter: `drop-shadow(0 0 6px ${color}60)` }}
+        style={{ filter: `drop-shadow(0 0 6px rgba(255,255,255,0.25))` }}
       />
     </svg>
   );
@@ -78,38 +78,72 @@ export default function LeetCode() {
 
   const difficulties = stats
     ? [
-        { label: "Easy", solved: stats.easySolved, total: stats.totalEasy, color: "#22c55e" },
-        { label: "Medium", solved: stats.mediumSolved, total: stats.totalMedium, color: "#f59e0b" },
-        { label: "Hard", solved: stats.hardSolved, total: stats.totalHard, color: "#ef4444" },
+        { label: "Easy", solved: stats.easySolved, total: stats.totalEasy, color: "#86efac" },
+        { label: "Medium", solved: stats.mediumSolved, total: stats.totalMedium, color: "#fcd34d" },
+        { label: "Hard", solved: stats.hardSolved, total: stats.totalHard, color: "#fca5a5" },
       ]
     : [];
 
   return (
-    <section id="leetcode" className="relative py-24 overflow-hidden">
-      <div ref={ref} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="leetcode" className="relative py-28 overflow-hidden" style={{ background: "#0C0C0C" }}>
+      {/* Animated ambient orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.6, 1], opacity: [0.07, 0.17, 0.07] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute pointer-events-none"
+        style={{ top: "-10%", left: "-5%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(252,211,77,0.15) 0%, transparent 70%)", filter: "blur(90px)" }}
+      />
+      <motion.div
+        animate={{ scale: [1.4, 1, 1.4], opacity: [0.05, 0.12, 0.05] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        className="absolute pointer-events-none"
+        style={{ bottom: "-5%", right: "-5%", width: 650, height: 650, borderRadius: "50%", background: "radial-gradient(circle, rgba(252,165,165,0.12) 0%, transparent 70%)", filter: "blur(80px)" }}
+      />
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.04, 0.09, 0.04] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 7 }}
+        className="absolute pointer-events-none"
+        style={{ top: "40%", right: "20%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(192,132,252,0.1) 0%, transparent 70%)", filter: "blur(80px)" }}
+      />
+
+      <div ref={ref} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-16 text-center"
         >
-          <p className="text-sm text-purple-400 tracking-widest uppercase mb-3 font-medium">
-            Problem Solving
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            LeetCode{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #f59e0b, #ef4444)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Stats
-            </span>
+          <h2
+            className="hero-heading"
+            style={{
+              fontWeight: 900,
+              textTransform: "uppercase",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              fontSize: "clamp(3rem, 11vw, 130px)",
+              marginBottom: "1rem",
+            }}
+          >
+            LeetCode
           </h2>
+          <p style={{ color: "#64748b", fontSize: "clamp(0.8rem, 1.2vw, 1rem)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+            Problem Solving Stats
+          </p>
+
+          {/* Animated gradient divider */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+            style={{
+              height: "2px",
+              background: "linear-gradient(90deg, transparent, #fcd34d, #fca5a5, transparent)",
+              borderRadius: "9999px",
+              marginTop: "1.5rem",
+              transformOrigin: "center",
+            }}
+          />
         </motion.div>
 
         <motion.div
@@ -118,8 +152,8 @@ export default function LeetCode() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="rounded-2xl overflow-hidden"
           style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
           }}
         >
           {loading ? (
@@ -140,26 +174,26 @@ export default function LeetCode() {
                     <CircleProgress
                       value={stats.totalSolved}
                       max={stats.totalEasy + stats.totalMedium + stats.totalHard}
-                      color="#a855f7"
-                      size={100}
-                      strokeWidth={7}
+                      color="#c084fc"
+                      size={130}
+                      strokeWidth={9}
                       inView={inView}
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-xl font-bold text-white">{stats.totalSolved}</span>
-                      <span className="text-xs text-slate-600">solved</span>
+                      <span className="text-2xl font-bold text-white">{stats.totalSolved}</span>
+                      <span className="text-xs text-slate-500">solved</span>
                     </div>
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Code2 size={16} className="text-purple-400" />
+                      <Code2 size={16} style={{ color: "#c084fc" }} />
                       <span className="text-lg font-bold text-white">NikhilSingh01</span>
                     </div>
                     <a
                       href="https://leetcode.com/u/NikhilSingh01/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-slate-500 hover:text-purple-400 flex items-center gap-1 transition-colors"
+                      className="text-sm text-slate-500 hover:text-purple-300 flex items-center gap-1 transition-colors"
                     >
                       View Profile <ExternalLink size={11} />
                     </a>
@@ -171,22 +205,22 @@ export default function LeetCode() {
                   <div
                     className="flex items-center gap-2 px-4 py-2 rounded-xl"
                     style={{
-                      background: "rgba(168,85,247,0.1)",
-                      border: "1px solid rgba(168,85,247,0.2)",
+                      background: "rgba(192,132,252,0.1)",
+                      border: "1px solid rgba(192,132,252,0.2)",
                     }}
                   >
-                    <Trophy size={14} className="text-purple-400" />
-                    <span className="text-sm text-purple-300 font-medium">Problem Solver</span>
+                    <Trophy size={14} style={{ color: "#c084fc" }} />
+                    <span className="text-sm font-medium" style={{ color: "#c084fc" }}>Problem Solver</span>
                   </div>
                   <div
                     className="flex items-center gap-2 px-4 py-2 rounded-xl"
                     style={{
-                      background: "rgba(245,158,11,0.1)",
-                      border: "1px solid rgba(245,158,11,0.2)",
+                      background: "rgba(252,211,77,0.08)",
+                      border: "1px solid rgba(252,211,77,0.18)",
                     }}
                   >
-                    <Zap size={14} className="text-amber-400" />
-                    <span className="text-sm text-amber-300 font-medium">
+                    <Zap size={14} style={{ color: "#fcd34d" }} />
+                    <span className="text-sm font-medium" style={{ color: "#fcd34d" }}>
                       Rank #{stats.ranking.toLocaleString()}
                     </span>
                   </div>
@@ -212,12 +246,12 @@ export default function LeetCode() {
                         value={d.solved}
                         max={d.total}
                         color={d.color}
-                        size={80}
-                        strokeWidth={5}
+                        size={100}
+                        strokeWidth={6}
                         inView={inView}
                       />
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-base font-bold" style={{ color: d.color }}>
+                        <span className="text-lg font-bold" style={{ color: d.color }}>
                           {d.solved}
                         </span>
                       </div>
