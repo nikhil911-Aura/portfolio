@@ -3,12 +3,12 @@ import { PORTFOLIO_SYSTEM_PROMPT } from "@/lib/portfolio-context";
 const PROVIDERS = {
   groq: {
     url: "https://api.groq.com/openai/v1/chat/completions",
-    model: "llama-3.1-8b-instant",
+    model: "openai/gpt-oss-20b",
     key: () => process.env.GROQ_API_KEY ?? "",
   },
   cerebras: {
     url: "https://api.cerebras.ai/v1/chat/completions",
-    model: "llama3.1-8b",
+    model: "gpt-oss-120b",
     key: () => process.env.CEREBRAS_API_KEY ?? "",
   },
 } as const;
