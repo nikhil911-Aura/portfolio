@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import FadeInView from "./FadeInView";
 
@@ -21,45 +21,45 @@ const projects: Project[] = [
     category: "Full Stack Platform",
     title: "DevWorld",
     live: "https://www.devworld.in/",
-    col1a: "/images/image4.jpg",
-    col1b: "/images/image8.jpg",
-    col2: "/images/image5.jpg",
+    col1a: "/images/opt/image4.webp",
+    col1b: "/images/opt/image8.webp",
+    col2: "/images/opt/image5.webp",
   },
   {
     num: "02",
     category: "GenAI Product",
     title: "NovaChat AI",
     live: "https://nova-ai-lyart-pi.vercel.app/",
-    col1a: "/images/image9.jpg",
-    col1b: "/images/image6.jpg",
-    col2: "/images/image7.jpg",
+    col1a: "/images/opt/image9.webp",
+    col1b: "/images/opt/image6.webp",
+    col2: "/images/opt/image7.webp",
   },
   {
     num: "03",
     category: "Event Booking App",
     title: "Book Your Event",
     live: "https://book-your-event.vercel.app/",
-    col1a: "/images/image6.jpg",
-    col1b: "/images/image10.jpg",
-    col2: "/images/image11.jpg",
+    col1a: "/images/opt/image6.webp",
+    col1b: "/images/opt/image10.webp",
+    col2: "/images/opt/image11.webp",
   },
   {
     num: "04",
     category: "Next.js SSR App",
     title: "MotoPulse",
     live: "https://moto-pulse.vercel.app/",
-    col1a: "/images/image7.jpg",
-    col1b: "/images/image11.jpg",
-    col2: "/images/image12.jpg",
+    col1a: "/images/opt/image7.webp",
+    col1b: "/images/opt/image11.webp",
+    col2: "/images/opt/image12.webp",
   },
   {
     num: "05",
     category: "Project Management",
     title: "Karya",
     live: "https://karya.ibrcloud.com/",
-    col1a: "/images/image1.jpg",
-    col1b: "/images/image2.jpg",
-    col2: "/images/image3.jpg",
+    col1a: "/images/opt/image1.webp",
+    col1b: "/images/opt/image2.webp",
+    col2: "/images/opt/image3.webp",
   },
 ];
 
@@ -81,19 +81,20 @@ function ProjectCard({
   const scaleEnd = index < TOTAL - 1 ? (index + 1) / TOTAL + 0.05 : 1;
   const scale = useTransform(scrollYProgress, [scaleStart, scaleEnd], [1, targetScale]);
 
-  const imgStyle: React.CSSProperties = {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    borderRadius: CARD_RADIUS,
-    display: "block",
-  };
+  // left column is 40% of the card, right column 60% — tell the optimizer so
+  // it never ships more pixels than the box can show
+  const LEFT_SIZES = "(max-width: 768px) 40vw, 38vw";
+  const RIGHT_SIZES = "(max-width: 768px) 60vw, 57vw";
 
   return (
     <div style={{ height: "85vh", position: "sticky", top: `calc(6rem + ${index * 28}px)` }}>
       <motion.div
         style={{
           scale,
+          // keep the card on its own GPU layer: the scale transform then
+          // composites instead of repainting the image grid every frame
+          willChange: "transform",
+          backfaceVisibility: "hidden",
           height: "100%",
           background: "#0C0C0C",
           borderRadius: CARD_RADIUS,
@@ -186,17 +187,38 @@ function ProjectCard({
               gap: "clamp(0.5rem, 1vw, 0.75rem)",
             }}
           >
-            <div style={{ flex: "0 0 clamp(130px, 16vw, 230px)", overflow: "hidden", borderRadius: CARD_RADIUS }}>
-              <img src={project.col1a} alt="" style={imgStyle} />
+            <div style={{ position: "relative", flex: "0 0 clamp(130px, 16vw, 230px)", overflow: "hidden", borderRadius: CARD_RADIUS }}>
+              <Image
+                src={project.col1a}
+                alt={`${project.title} preview`}
+                fill
+                sizes={LEFT_SIZES}
+                priority={index === 0}
+                style={{ objectFit: "cover" }}
+              />
             </div>
-            <div style={{ flex: "0 0 clamp(160px, 22vw, 340px)", overflow: "hidden", borderRadius: CARD_RADIUS }}>
-              <img src={project.col1b} alt="" style={imgStyle} />
+            <div style={{ position: "relative", flex: "0 0 clamp(160px, 22vw, 340px)", overflow: "hidden", borderRadius: CARD_RADIUS }}>
+              <Image
+                src={project.col1b}
+                alt={`${project.title} preview`}
+                fill
+                sizes={LEFT_SIZES}
+                priority={index === 0}
+                style={{ objectFit: "cover" }}
+              />
             </div>
           </div>
 
           {/* Right col: 1 tall image (60%) */}
-          <div style={{ width: "60%", overflow: "hidden", borderRadius: CARD_RADIUS }}>
-            <img src={project.col2} alt="" style={{ ...imgStyle, height: "100%" }} />
+          <div style={{ position: "relative", width: "60%", overflow: "hidden", borderRadius: CARD_RADIUS }}>
+            <Image
+              src={project.col2}
+              alt={`${project.title} preview`}
+              fill
+              sizes={RIGHT_SIZES}
+              priority={index === 0}
+              style={{ objectFit: "cover" }}
+            />
           </div>
         </div>
       </motion.div>
