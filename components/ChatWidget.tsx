@@ -94,11 +94,11 @@ function ContactButton({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-type Provider = "groq" | "cerebras";
+type Provider = "gptoss" | "qwen";
 
 const PROVIDERS: { id: Provider; label: string; color: string }[] = [
-  { id: "groq", label: "Groq", color: "#f97316" },
-  { id: "cerebras", label: "Cerebras", color: "#22d3ee" },
+  { id: "gptoss", label: "GPT-OSS", color: "#f97316" },
+  { id: "qwen", label: "Qwen", color: "#22d3ee" },
 ];
 
 export default function ChatWidget() {
@@ -108,7 +108,7 @@ export default function ChatWidget() {
   const [streaming, setStreaming] = useState(false);
   const [streamContent, setStreamContent] = useState("");
   const [msgCount, setMsgCount] = useState(0);
-  const [provider, setProvider] = useState<Provider>("groq");
+  const [provider, setProvider] = useState<Provider>("gptoss");
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -284,9 +284,9 @@ export default function ChatWidget() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white leading-tight">Ask about Nikhil</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  {SESSION_LIMIT - msgCount} msgs left · Llama 3 ·{" "}
-                  <span style={{ color: provider === "groq" ? "#f97316" : "#22d3ee" }}>
-                    {provider === "groq" ? "Groq" : "Cerebras"}
+                  {SESSION_LIMIT - msgCount} msgs left ·{" "}
+                  <span style={{ color: provider === "gptoss" ? "#f97316" : "#22d3ee" }}>
+                    {provider === "gptoss" ? "GPT-OSS 20B" : "Qwen3 27B"}
                   </span>
                 </p>
               </div>
@@ -591,7 +591,7 @@ export default function ChatWidget() {
                 </motion.button>
               </div>
               <p className="text-center text-[10px] text-slate-800 mt-2">
-                Powered by Llama 3 via {provider === "groq" ? "Groq" : "Cerebras"}
+                Powered by {provider === "gptoss" ? "GPT-OSS 20B" : "Qwen3 27B"} via Groq
               </p>
             </div>
           </motion.div>
