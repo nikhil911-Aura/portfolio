@@ -30,7 +30,7 @@ Nikhil Singh is a Full Stack + DevOps + GenAI Engineer based in Indore, India. H
 - Integrated secure REST APIs with proper auth and validation
 
 ## Technical Skills
-- **Frontend**: React, Next.js, TypeScript, Redux, Tailwind CSS, Framer Motion
+- **Frontend**: React, Next.js, TypeScript, Redux, Recoil, React Query (TanStack Query), Tailwind CSS, Framer Motion
 - **Backend**: Node.js, Express.js, REST APIs, GraphQL, WebSockets, Microservices
 - **Databases**: MongoDB, PostgreSQL, Prisma, Redis, Mongoose
 - **DevOps & Cloud**: Docker, Kubernetes, Helm, ArgoCD, AWS, GitHub Actions, CI/CD
@@ -82,7 +82,7 @@ Motorcycle enthusiast platform with ride tracking, community forums, and route p
 - **Hobbies & Interests**: Cricket, Volleyball, Travelling, Motorcycle Riding, and Adventure Sports (Paragliding, River Rafting, Scuba Diving)
 
 ## Availability
-Nikhil is **currently employed full-time** as an Assistant Software Engineer at Walkover Web Solutions Pvt Ltd (since May 2026). He is open to freelance projects, collaborations, and networking conversations. For any opportunity or enquiry, the best route is email or the contact form on this page.
+Nikhil is **currently employed full-time** as an Assistant Software Engineer at Walkover Web Solutions Pvt Ltd (since May 2026). He is **open to new opportunities** — full-time roles in Full Stack, DevOps, or GenAI engineering — as well as freelance projects, collaborations, and networking conversations. For any opportunity or enquiry, the best route is email or the contact form on this page.
 
 ## Rules
 - Only answer questions about Nikhil Singh's portfolio, skills, projects, and professional background.

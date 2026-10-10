@@ -12,16 +12,15 @@ export default function Icon() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 7,
-        background: "linear-gradient(135deg, #9333ea, #3b82f6)",
-        fontFamily: "sans-serif",
-        fontWeight: 800,
-        fontSize: 13,
-        color: "white",
+        borderRadius: 16,
+        background: "#221e19",
+        fontWeight: 600,
+        fontSize: 14,
+        color: "#f4efe6",
         letterSpacing: "-0.5px",
       }}
     >
-      NS
+      N
     </div>,
     { ...size }
   );
