@@ -9,14 +9,25 @@ phases:
   install:
     on-failure: ABORT
     runtime-versions:
-      nodejs: 22
+      nodejs: 24
     commands:
       - npm ci --no-audit --no-fund
   build:
     on-failure: ABORT
     commands:
       - npm run build
-      - bash deploy/ec2/package.sh
+      - test -f .next/standalone/server.js
+      - rm -rf build/codedeploy
+      - mkdir -p build/codedeploy/app build/codedeploy/deploy
+      - cp -a .next/standalone/. build/codedeploy/app/
+      - cp -a public build/codedeploy/app/public
+      - cp -a .next/static build/codedeploy/app/.next/static
+      # Tracing can copy local dotenv files; runtime secrets stay on EC2.
+      - find build/codedeploy/app -type f -name '.env*' -delete
+      - rm -rf build/codedeploy/app/.next/cache
+      - cp appspec.yml build/codedeploy/
+      - cp deploy/*.sh build/codedeploy/deploy/
+      - chmod 755 build/codedeploy/deploy/*.sh
 artifacts:
   base-directory: build/codedeploy
   files:
