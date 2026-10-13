@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Self-contained server bundle for AWS Elastic Beanstalk. Only enabled when
+  // Self-contained server bundle for AWS EC2. Only enabled when
   // BUILD_STANDALONE=true (set in buildspec.yml), so Vercel builds are unchanged.
   ...(process.env.BUILD_STANDALONE === "true" && { output: "standalone" }),
   images: {

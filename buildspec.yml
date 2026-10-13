@@ -1,41 +1,23 @@
-# AWS CodeBuild spec: builds the Next.js app as a standalone Node.js server
-# and packages it as an Elastic Beanstalk (Node.js platform) source bundle.
-# Not used by Vercel.
+# AWS only; Vercel does not use this file.
 version: 0.2
-
 env:
   shell: bash
   variables:
     BUILD_STANDALONE: "true"
     NEXT_TELEMETRY_DISABLED: "1"
-
 phases:
   install:
     on-failure: ABORT
     runtime-versions:
       nodejs: 22
     commands:
-      - node --version
-      - npm --version
-  pre_build:
-    on-failure: ABORT
-    commands:
       - npm ci --no-audit --no-fund
   build:
     on-failure: ABORT
     commands:
       - npm run build
-      # Assemble the bundle: standalone server + static assets + EB config
-      - test -f .next/standalone/server.js
-      - cp -r public .next/standalone/public
-      - cp -r .next/static .next/standalone/.next/static
-      - cp deploy/eb/Procfile .next/standalone/Procfile
-      - cp -r deploy/eb/.ebextensions .next/standalone/.ebextensions
-      - rm -rf .next/standalone/.env* .next/standalone/.next/cache
-      - test -f .next/standalone/Procfile && test -d .next/standalone/.next/static && test -d .next/standalone/node_modules/next
-      - du -sh .next/standalone
-
+      - bash deploy/ec2/package.sh
 artifacts:
-  base-directory: .next/standalone
+  base-directory: build/codedeploy
   files:
     - "**/*"

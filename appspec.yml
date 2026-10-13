@@ -1,0 +1,27 @@
+version: 0.0
+os: linux
+files:
+  - source: app
+    destination: /opt/portfolio/app
+file_exists_behavior: OVERWRITE
+hooks:
+  ApplicationStop:
+    - location: deploy/ec2/stop.sh
+      timeout: 60
+      runas: root
+  BeforeInstall:
+    - location: deploy/ec2/prepare.sh
+      timeout: 60
+      runas: root
+  AfterInstall:
+    - location: deploy/ec2/update.sh
+      timeout: 60
+      runas: root
+  ApplicationStart:
+    - location: deploy/ec2/start.sh
+      timeout: 60
+      runas: root
+  ValidateService:
+    - location: deploy/ec2/validate.sh
+      timeout: 180
+      runas: root
